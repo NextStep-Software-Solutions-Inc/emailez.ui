@@ -9,6 +9,9 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@clerk/react-router": "^1.6.3",
+    "@fontsource/comfortaa": "^5.2.6",
+    "@fontsource/nunito": "^5.2.6",
     "@react-router/node": "^7.5.3",
     "@react-router/serve": "^7.5.3",
     "isbot": "^5.1.27",

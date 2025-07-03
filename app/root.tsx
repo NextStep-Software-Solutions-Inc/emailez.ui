@@ -6,9 +6,15 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
-
-import type { Route } from "./+types/root";
+import { rootAuthLoader } from '@clerk/react-router/ssr.server'
 import "./app.css";
+import { ClerkProvider, SignedIn, SignedOut, UserButton, SignInButton } from '@clerk/react-router'
+import type { Route } from "./routes/+types/home";
+import Header from "components/Header";
+
+export async function loader(args: Route.LoaderArgs) {
+  return rootAuthLoader(args)
+}
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -33,6 +39,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
+        <Header/>
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -41,8 +48,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App() {
-  return <Outlet />;
+export default function App({ loaderData}: Route.ComponentProps) {
+ return (
+    <ClerkProvider
+      loaderData={loaderData}
+      signUpFallbackRedirectUrl="/"
+      signInFallbackRedirectUrl="/"
+    >
+      <main>
+        <Outlet />
+      </main>
+    </ClerkProvider>
+  )
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
