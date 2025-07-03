@@ -2,6 +2,8 @@
 
 A modern, beautiful web application for Email EZ - a multi-tenant, subscription-based email sending service with configurable SMTP settings.
 
+🚀 **Live Demo**: [https://emailez-aqp2xh5hm-nextstep-inc.vercel.app](https://emailez-aqp2xh5hm-nextstep-inc.vercel.app)
+
 ## 🚀 Features
 
 - 🎨 **Beautiful Landing Page** - Modern, responsive design with gradient effects
@@ -108,6 +110,24 @@ npm run build
 ```
 
 ## 🚀 Deployment
+
+### Vercel Deployment (Recommended)
+
+This project is deployed on Vercel with automatic React Router v7 detection:
+
+1. **Auto-Deployment**: Push to main branch for automatic deployment
+2. **Live URL**: [https://emailez-aqp2xh5hm-nextstep-inc.vercel.app](https://emailez-aqp2xh5hm-nextstep-inc.vercel.app)
+3. **Preview Deployments**: Every PR gets its own preview URL
+
+#### Manual Deployment
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy to production
+vercel --prod
+```
 
 ### Docker Deployment
 
