@@ -17,21 +17,21 @@ function Hero() {
   return (
     <section className="bg-gradient-to-br from-slate-50 to-blue-50 py-20 px-6">
       <div className="max-w-6xl mx-auto text-center">
-        <div className="mb-8">
+        <div className="mb-8 animate-fade-in-up animation-delay-0">
           <BrandName />
         </div>
-        <h2 className="text-2xl md:text-3xl text-gray-700 mb-6 font-medium" style={{ fontFamily: 'Nunito, sans-serif' }}>
+        <h2 className="text-2xl md:text-3xl text-gray-700 mb-6 font-medium animate-fade-in-up animation-delay-200" style={{ fontFamily: 'Nunito, sans-serif' }}>
           Simple, Powerful Email Sending Service
         </h2>
-        <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed" style={{ fontFamily: 'Nunito, sans-serif' }}>
+        <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animation-delay-400" style={{ fontFamily: 'Nunito, sans-serif' }}>
           Multi-tenant subscription service that lets you configure multiple email providers, 
           manage SMTP settings, and send emails effortlessly across all your projects.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl" style={{ fontFamily: 'Nunito, sans-serif' }}>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animation-delay-600">
+          <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform" style={{ fontFamily: 'Nunito, sans-serif' }}>
             Get Started Free
           </button>
-          <button className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-600 hover:text-white transition-all duration-300" style={{ fontFamily: 'Nunito, sans-serif' }}>
+          <button className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-105 transform" style={{ fontFamily: 'Nunito, sans-serif' }}>
             View Pricing
           </button>
         </div>
@@ -77,7 +77,7 @@ function Features() {
   return (
     <section id="features" className="py-20 px-6 bg-white">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 animate-fade-in-up">
           <h3 className="text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Nunito, sans-serif' }}>
             Why Choose Email EZ?
           </h3>
@@ -87,8 +87,12 @@ function Features() {
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <div key={index} className="p-6 rounded-xl bg-gradient-to-br from-gray-50 to-blue-50 hover:from-blue-50 hover:to-purple-50 transition-all duration-300 hover:shadow-lg">
-              <div className="text-4xl mb-4">{feature.icon}</div>
+            <div 
+              key={index} 
+              className="p-6 rounded-xl bg-gradient-to-br from-gray-50 to-blue-50 hover:from-blue-50 hover:to-purple-50 transition-all duration-300 hover:shadow-lg hover:scale-105 transform animate-fade-in-up cursor-pointer"
+              style={{ animationDelay: `${index * 150}ms` }}
+            >
+              <div className="text-4xl mb-4 animate-bounce-gentle">{feature.icon}</div>
               <h4 className="text-xl font-semibold text-gray-900 mb-3" style={{ fontFamily: 'Nunito, sans-serif' }}>
                 {feature.title}
               </h4>
@@ -125,16 +129,16 @@ function HowItWorks() {
   return (
     <section className="py-20 px-6 bg-gradient-to-br from-blue-50 to-purple-50">
       <div className="max-w-4xl mx-auto text-center">
-        <h3 className="text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Nunito, sans-serif' }}>
+        <h3 className="text-4xl font-bold text-gray-900 mb-4 animate-fade-in-up" style={{ fontFamily: 'Nunito, sans-serif' }}>
           How It Works
         </h3>
-        <p className="text-xl text-gray-600 mb-16" style={{ fontFamily: 'Nunito, sans-serif' }}>
+        <p className="text-xl text-gray-600 mb-16 animate-fade-in-up animation-delay-200" style={{ fontFamily: 'Nunito, sans-serif' }}>
           Get started with Email EZ in just a few simple steps
         </p>
         <div className="grid md:grid-cols-3 gap-8">
           {steps.map((step, index) => (
-            <div key={index} className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <div key={index} className="text-center animate-fade-in-up hover:scale-105 transform transition-all duration-300" style={{ animationDelay: `${(index + 1) * 200}ms` }}>
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4 animate-pulse-soft hover:animate-bounce-gentle" style={{ fontFamily: 'Nunito, sans-serif' }}>
                 {step.step}
               </div>
               <h4 className="text-xl font-semibold text-gray-900 mb-3" style={{ fontFamily: 'Nunito, sans-serif' }}>
@@ -155,17 +159,17 @@ function CTA() {
   return (
     <section className="py-20 px-6 bg-gradient-to-r from-blue-600 to-purple-600">
       <div className="max-w-4xl mx-auto text-center">
-        <h3 className="text-4xl font-bold text-white mb-4" style={{ fontFamily: 'Nunito, sans-serif' }}>
+        <h3 className="text-4xl font-bold text-white mb-4 animate-fade-in-up" style={{ fontFamily: 'Nunito, sans-serif' }}>
           Ready to Simplify Your Email Sending?
         </h3>
-        <p className="text-xl text-blue-100 mb-8" style={{ fontFamily: 'Nunito, sans-serif' }}>
+        <p className="text-xl text-blue-100 mb-8 animate-fade-in-up animation-delay-200" style={{ fontFamily: 'Nunito, sans-serif' }}>
           Join thousands of developers and agencies who trust Email EZ for their email infrastructure.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl" style={{ fontFamily: 'Nunito, sans-serif' }}>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animation-delay-400">
+          <button className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform" style={{ fontFamily: 'Nunito, sans-serif' }}>
             Start Free Trial
           </button>
-          <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300" style={{ fontFamily: 'Nunito, sans-serif' }}>
+          <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-105 transform" style={{ fontFamily: 'Nunito, sans-serif' }}>
             Contact Sales
           </button>
         </div>
