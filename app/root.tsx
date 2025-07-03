@@ -10,7 +10,8 @@ import { rootAuthLoader } from '@clerk/react-router/ssr.server'
 import "./app.css";
 import { ClerkProvider, SignedIn, SignedOut, UserButton, SignInButton } from '@clerk/react-router'
 import type { Route } from "./routes/+types/home";
-import Header from "components/Header";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 export async function loader(args: Route.LoaderArgs) {
   return rootAuthLoader(args)
@@ -41,6 +42,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <Header/>
         {children}
+        <Footer/>
         <ScrollRestoration />
         <Scripts />
       </body>
