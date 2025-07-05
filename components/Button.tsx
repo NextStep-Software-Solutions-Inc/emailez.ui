@@ -1,3 +1,5 @@
+import { cn } from '../lib/utils';
+
 interface ButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
@@ -10,7 +12,7 @@ export default function Button({
   children, 
   onClick, 
   variant = 'primary', 
-  className = "",
+  className,
   size = 'md'
 }: ButtonProps) {
   const baseClasses = "font-semibold transition-all duration-300 rounded-lg";
@@ -30,7 +32,13 @@ export default function Button({
 
   return (
     <button 
-      className={`${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${className}`}
+      type="button"
+      className={cn(
+        baseClasses,
+        sizeClasses[size],
+        variantClasses[variant],
+        className
+      )}
       style={fontFamily}
       onClick={onClick}
     >

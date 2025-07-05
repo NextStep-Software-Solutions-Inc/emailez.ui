@@ -1,3 +1,5 @@
+import { cn } from '../lib/utils';
+
 interface MobileMenuButtonProps {
   isOpen: boolean;
   onClick: () => void;
@@ -13,23 +15,26 @@ export default function MobileMenuButton({ isOpen, onClick }: MobileMenuButtonPr
       <div className="w-6 h-6 relative">
         {/* Top line */}
         <span 
-          className={`absolute left-0 w-6 h-0.5 bg-gray-700 transition-all duration-300 ease-in-out ${
-            isOpen ? 'top-3 rotate-45' : 'top-1'
-          }`}
+          className={cn(
+            "absolute left-0 w-6 h-0.5 bg-gray-700 transition-all duration-300 ease-in-out",
+            isOpen ? "top-3 rotate-45" : "top-1"
+          )}
         />
         
         {/* Middle line */}
         <span 
-          className={`absolute left-0 top-3 w-6 h-0.5 bg-gray-700 transition-all duration-300 ease-in-out ${
-            isOpen ? 'opacity-0 scale-0' : 'opacity-100 scale-100'
-          }`}
+          className={cn(
+            "absolute left-0 top-3 w-6 h-0.5 bg-gray-700 transition-all duration-300 ease-in-out",
+            isOpen ? "opacity-0 scale-0" : "opacity-100 scale-100"
+          )}
         />
         
         {/* Bottom line */}
         <span 
-          className={`absolute left-0 w-6 h-0.5 bg-gray-700 transition-all duration-300 ease-in-out ${
-            isOpen ? 'top-3 -rotate-45' : 'top-5'
-          }`}
+          className={cn(
+            "absolute left-0 w-6 h-0.5 bg-gray-700 transition-all duration-300 ease-in-out",
+            isOpen ? "top-3 -rotate-45" : "top-5"
+          )}
         />
       </div>
     </button>
