@@ -1,6 +1,7 @@
 
 import { useElementHeight } from "../../hooks/useElementHeight";
 import { SignedIn, SignedOut, SignInButton } from '@clerk/react-router';
+import { Link } from 'react-router';
 
 function BrandName() {
   return (
@@ -31,17 +32,29 @@ function Hero() {
                 Get Started Free
               </SignInButton>
             </button>
-            <button className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-105 transform" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <Link 
+              to="/pricing"
+              className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-105 transform text-center block" 
+              style={{ fontFamily: 'Nunito, sans-serif' }}
+            >
               View Pricing
-            </button>
+            </Link>
           </SignedOut>
           <SignedIn>
-            <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <Link 
+              to="/dashboard"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform text-center block" 
+              style={{ fontFamily: 'Nunito, sans-serif' }}
+            >
               Go to Dashboard
-            </button>
-            <button className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-105 transform" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            </Link>
+            <Link 
+              to="/dashboard/settings"
+              className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-105 transform text-center block" 
+              style={{ fontFamily: 'Nunito, sans-serif' }}
+            >
               Manage Account
-            </button>
+            </Link>
           </SignedIn>
         </div>
       </div>
@@ -181,17 +194,29 @@ function CTA() {
                 Start Free Trial
               </SignInButton>
             </button>
-            <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-105 transform" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <Link 
+              to="/support"
+              className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-105 transform text-center block" 
+              style={{ fontFamily: 'Nunito, sans-serif' }}
+            >
               Contact Sales
-            </button>
+            </Link>
           </SignedOut>
           <SignedIn>
-            <button className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <Link 
+              to="/dashboard"
+              className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform text-center block" 
+              style={{ fontFamily: 'Nunito, sans-serif' }}
+            >
               Access Dashboard
-            </button>
-            <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-105 transform" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            </Link>
+            <Link 
+              to="/pricing"
+              className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-105 transform text-center block" 
+              style={{ fontFamily: 'Nunito, sans-serif' }}
+            >
               Upgrade Plan
-            </button>
+            </Link>
           </SignedIn>
         </div>
       </div>

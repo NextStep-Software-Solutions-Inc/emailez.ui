@@ -15,12 +15,6 @@ export default [
         route("dashboard/analytics", "routes/dashboard.analytics.tsx"),
         route("dashboard/activity", "routes/dashboard.activity.tsx"),
         route("dashboard/settings", "routes/dashboard.settings.tsx"),
-    ]),
-    // route("about", "routes/about.tsx"),
-    // route("contact", "routes/contact.tsx"),
-    // route("download", "routes/download.tsx"),
-    // route("privacy", "routes/privacy.tsx"),
-    // route("terms", "routes/terms.tsx"),
-    // route("404", "routes/404.tsx"),
+    ])
 
 ] satisfies RouteConfig;
