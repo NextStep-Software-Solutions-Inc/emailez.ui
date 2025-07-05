@@ -15,6 +15,11 @@ const navigationItems = [
     icon: "📊"
   },
   { 
+    href: "/dashboard/compose", 
+    label: "Compose", 
+    icon: "✉️"
+  },
+  { 
     href: "/dashboard/configurations", 
     label: "Configurations", 
     icon: "⚙️"
@@ -54,19 +59,54 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Left side - Mobile Menu Button and Logo */}
-            <div className="flex items-center space-x-4">
-              {/* Mobile menu button */}
-              <button
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="lg:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
+            <div className="flex items-center">
+              {/* Mobile menu button - animates width and opacity */}
+              <div className={cn(
+                "overflow-hidden transition-all duration-300 ease-in-out",
+                "lg:w-0 lg:opacity-0",
+                "w-12 opacity-100"
+              )}>
+                <button
+                  onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                  className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+                >
+                  <div className="w-6 h-6 relative">
+                    {/* Panel icon - shows when closed to indicate "open sidebar" */}
+                    <svg 
+                      className={cn(
+                        "w-6 h-6 absolute inset-0 transition-opacity duration-300 ease-in-out",
+                        isSidebarOpen ? "opacity-0" : "opacity-100"
+                      )}
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <rect x="3" y="4" width="18" height="16" rx="2" ry="2" strokeWidth="2"/>
+                      <path d="M9 4v16" strokeWidth="2"/>
+                    </svg>
+                    
+                    {/* Arrow icon - shows when open to indicate "close sidebar" */}
+                    <svg 
+                      className={cn(
+                        "w-6 h-6 absolute inset-0 transition-opacity duration-300 ease-in-out",
+                        isSidebarOpen ? "opacity-100" : "opacity-0"
+                      )}
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </div>
+                </button>
+              </div>
 
-              {/* Logo */}
-              <a href="/" className="flex items-center space-x-3">
+              {/* Logo - moves smoothly with hamburger */}
+              <a href="/" className={cn(
+                "flex items-center space-x-3 transition-all duration-300 ease-in-out",
+                "lg:ml-0",
+                "ml-4"
+              )}>
                 <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-sm">E</span>
                 </div>

@@ -10,6 +10,7 @@ export default [
     ]),
     layout("routes/dashboard.layout.tsx", [
         route("dashboard", "routes/dashboard.tsx"),
+        route("dashboard/compose", "routes/dashboard.compose.tsx"),
         route("dashboard/configurations", "routes/dashboard.configurations.tsx"),
         route("dashboard/analytics", "routes/dashboard.analytics.tsx"),
         route("dashboard/activity", "routes/dashboard.activity.tsx"),

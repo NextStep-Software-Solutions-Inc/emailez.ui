@@ -1,206 +1,328 @@
+import { useState } from 'react';
 import { useUser } from '@clerk/react-router';
+import { cn } from '../../lib/utils';
 
-export function meta() {
-  return [
-    { title: "Settings - Email EZ" },
-    { name: "description", content: "Manage your account and application settings" },
-  ];
-}
+// Mock data for settings
+const mockOrganization = {
+  name: "Acme Corp",
+  domain: "acme.com",
+  plan: "Pro",
+  billingEmail: "billing@acme.com",
+  timezone: "America/New_York"
+};
+
+const mockNotificationSettings = {
+  emailNotifications: true,
+  smsNotifications: false,
+  webhookNotifications: true,
+  deliveryReports: true,
+  bounceAlerts: true,
+  failureAlerts: true
+};
+
+const mockApiSettings = {
+  apiKey: "ez_live_1234567890abcdef",
+  webhookUrl: "https://api.acme.com/webhooks/email",
+  rateLimitPerMinute: 1000,
+  callbackUrl: "https://app.acme.com/callback"
+};
 
 export default function DashboardSettings() {
   const { user } = useUser();
+  const [activeTab, setActiveTab] = useState('organization');
+  const [orgSettings, setOrgSettings] = useState(mockOrganization);
+  const [notificationSettings, setNotificationSettings] = useState(mockNotificationSettings);
+  const [apiSettings, setApiSettings] = useState(mockApiSettings);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSave = async (section: string) => {
+    setIsLoading(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setIsLoading(false);
+    // Show success message (in a real app, you'd use a toast/notification)
+    alert(`${section} settings saved successfully!`);
+  };
+
+  const tabs = [
+    { id: 'organization', label: 'Organization', icon: '🏢' },
+    { id: 'account', label: 'Account', icon: '👤' },
+    { id: 'notifications', label: 'Notifications', icon: '🔔' },
+    { id: 'api', label: 'API Settings', icon: '⚙️' }
+  ];
+
+  const TabButton = ({ tab, isActive, onClick }: { 
+    tab: typeof tabs[0]; 
+    isActive: boolean; 
+    onClick: () => void;
+  }) => (
+    <button
+      onClick={onClick}
+      className={cn(
+        "flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors",
+        isActive
+          ? "bg-blue-50 text-blue-700 border border-blue-200"
+          : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+      )}
+    >
+      <span>{tab.icon}</span>
+      <span className="font-medium">{tab.label}</span>
+    </button>
+  );
 
   return (
-    <div className="space-y-8">
-      {/* Header Section */}
+    <div className="space-y-6">
+      {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
-          Settings
-        </h1>
-        <p className="text-gray-600" style={{ fontFamily: 'Nunito, sans-serif' }}>
-          Manage your account settings and preferences.
+        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
+        <p className="text-gray-600 mt-1">
+          Manage your organization, account, and system preferences
         </p>
       </div>
 
-      {/* Settings Sections */}
-      <div className="space-y-6">
-        {/* Account Settings */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-              Account Information
-            </h3>
-            <p className="text-sm text-gray-600 mt-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
-              Update your account details and profile information.
-            </p>
-          </div>
-          <div className="px-6 py-4 space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Tabs */}
+      <div className="border-b border-gray-200">
+        <nav className="flex space-x-1 overflow-x-auto">
+          {tabs.map((tab) => (
+            <TabButton
+              key={tab.id}
+              tab={tab}
+              isActive={activeTab === tab.id}
+              onClick={() => setActiveTab(tab.id)}
+            />
+          ))}
+        </nav>
+      </div>
+
+      {/* Tab Content */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+        {activeTab === 'organization' && (
+          <div className="p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Organization Settings</h2>
+            <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  First Name
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Organization Name
                 </label>
                 <input
                   type="text"
-                  value={user?.firstName || ''}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  style={{ fontFamily: 'Nunito, sans-serif' }}
-                  readOnly
+                  value={orgSettings.name}
+                  onChange={(e) => setOrgSettings({ ...orgSettings, name: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  Last Name
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Domain
                 </label>
                 <input
                   type="text"
-                  value={user?.lastName || ''}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  style={{ fontFamily: 'Nunito, sans-serif' }}
-                  readOnly
+                  value={orgSettings.domain}
+                  onChange={(e) => setOrgSettings({ ...orgSettings, domain: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                Email Address
-              </label>
-              <input
-                type="email"
-                value={user?.emailAddresses[0]?.emailAddress || ''}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                style={{ fontFamily: 'Nunito, sans-serif' }}
-                readOnly
-              />
-            </div>
-            <div className="flex items-center justify-between pt-4">
-              <p className="text-sm text-gray-500" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                Account information is managed through your authentication provider.
-              </p>
-              <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                Edit Profile
-              </button>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Billing Email
+                </label>
+                <input
+                  type="email"
+                  value={orgSettings.billingEmail}
+                  onChange={(e) => setOrgSettings({ ...orgSettings, billingEmail: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Timezone
+                </label>
+                <select
+                  value={orgSettings.timezone}
+                  onChange={(e) => setOrgSettings({ ...orgSettings, timezone: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="America/New_York">Eastern Time</option>
+                  <option value="America/Chicago">Central Time</option>
+                  <option value="America/Denver">Mountain Time</option>
+                  <option value="America/Los_Angeles">Pacific Time</option>
+                  <option value="UTC">UTC</option>
+                </select>
+              </div>
+              <div className="pt-4">
+                <button
+                  onClick={() => handleSave('Organization')}
+                  disabled={isLoading}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Email Settings */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-              Email Preferences
-            </h3>
-            <p className="text-sm text-gray-600 mt-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
-              Configure how you receive notifications and updates.
-            </p>
-          </div>
-          <div className="px-6 py-4 space-y-4">
-            <div className="flex items-center justify-between">
+        {activeTab === 'account' && (
+          <div className="p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Account Information</h2>
+            <div className="space-y-4">
               <div>
-                <div className="text-sm font-medium text-gray-700" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  Email Notifications
-                </div>
-                <div className="text-sm text-gray-500" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  Receive notifications about email delivery status
-                </div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  value={user?.fullName || ''}
+                  readOnly
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50"
+                />
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" defaultChecked />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-            <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm font-medium text-gray-700" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  Weekly Reports
-                </div>
-                <div className="text-sm text-gray-500" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  Receive weekly email analytics reports
-                </div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  value={user?.emailAddresses[0]?.emailAddress || ''}
+                  readOnly
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50"
+                />
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" defaultChecked />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-            <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm font-medium text-gray-700" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  Security Alerts
-                </div>
-                <div className="text-sm text-gray-500" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  Receive alerts about account security events
-                </div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Account Created
+                </label>
+                <input
+                  type="text"
+                  value={user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : ''}
+                  readOnly
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50"
+                />
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" defaultChecked />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
+              <div className="pt-4">
+                <p className="text-sm text-gray-600">
+                  Account information is managed through your authentication provider. 
+                  Use the user menu to update your profile.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* API Settings */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-              API Settings
-            </h3>
-            <p className="text-sm text-gray-600 mt-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
-              Manage your API keys and access tokens.
-            </p>
+        {activeTab === 'notifications' && (
+          <div className="p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Notification Preferences</h2>
+            <div className="space-y-4">
+              {Object.entries(notificationSettings).map(([key, value]) => (
+                <div key={key} className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-900">
+                      {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      {key === 'emailNotifications' && 'Receive email notifications for important events'}
+                      {key === 'smsNotifications' && 'Receive SMS notifications for critical alerts'}
+                      {key === 'webhookNotifications' && 'Send webhook notifications to your endpoints'}
+                      {key === 'deliveryReports' && 'Get notified when emails are delivered'}
+                      {key === 'bounceAlerts' && 'Get alerts when emails bounce'}
+                      {key === 'failureAlerts' && 'Get alerts when email sending fails'}
+                    </p>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={value}
+                      onChange={(e) => setNotificationSettings({
+                        ...notificationSettings,
+                        [key]: e.target.checked
+                      })}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                  </label>
+                </div>
+              ))}
+              <div className="pt-4">
+                <button
+                  onClick={() => handleSave('Notification')}
+                  disabled={isLoading}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </div>
           </div>
-          <div className="px-6 py-4 space-y-4">
-            <div className="flex items-center justify-between">
+        )}
+
+        {activeTab === 'api' && (
+          <div className="p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">API Settings</h2>
+            <div className="space-y-4">
               <div>
-                <div className="text-sm font-medium text-gray-700" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   API Key
+                </label>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="password"
+                    value={apiSettings.apiKey}
+                    readOnly
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg bg-gray-50"
+                  />
+                  <button className="px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
+                    Copy
+                  </button>
+                  <button className="px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                    Regenerate
+                  </button>
                 </div>
-                <div className="text-sm text-gray-500" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  Use this key to authenticate API requests
-                </div>
               </div>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                Generate API Key
-              </button>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <div className="text-sm text-gray-500 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                No API key generated yet
-              </div>
-              <div className="text-xs text-gray-400" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                Generate an API key to start using the Email EZ API
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Danger Zone */}
-        <div className="bg-white rounded-lg shadow-sm border border-red-200">
-          <div className="px-6 py-4 border-b border-red-200">
-            <h3 className="text-lg font-semibold text-red-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-              Danger Zone
-            </h3>
-            <p className="text-sm text-red-600 mt-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
-              Irreversible and destructive actions.
-            </p>
-          </div>
-          <div className="px-6 py-4">
-            <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm font-medium text-gray-700" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  Delete Account
-                </div>
-                <div className="text-sm text-gray-500" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                  Permanently delete your account and all associated data
-                </div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Webhook URL
+                </label>
+                <input
+                  type="url"
+                  value={apiSettings.webhookUrl}
+                  onChange={(e) => setApiSettings({ ...apiSettings, webhookUrl: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
               </div>
-              <button className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors" style={{ fontFamily: 'Nunito, sans-serif' }}>
-                Delete Account
-              </button>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Rate Limit (per minute)
+                </label>
+                <input
+                  type="number"
+                  value={apiSettings.rateLimitPerMinute}
+                  onChange={(e) => setApiSettings({ ...apiSettings, rateLimitPerMinute: parseInt(e.target.value) })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Callback URL
+                </label>
+                <input
+                  type="url"
+                  value={apiSettings.callbackUrl}
+                  onChange={(e) => setApiSettings({ ...apiSettings, callbackUrl: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              <div className="pt-4">
+                <button
+                  onClick={() => handleSave('API')}
+                  disabled={isLoading}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

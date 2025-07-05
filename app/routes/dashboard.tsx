@@ -1,112 +1,274 @@
 import { useUser } from '@clerk/react-router';
+import type { Tenant, EmailDto, EmailConfiguration } from '../../lib/types';
 
 export function meta() {
   return [
     { title: "Dashboard - Email EZ" },
-    { name: "description", content: "Manage your email configurations and analytics" },
+    { name: "description", content: "Multi-tenant email service dashboard overview" },
   ];
 }
+
+// Mock data - will be replaced with API calls later
+const mockTenant: Tenant = {
+  tenantId: "123e4567-e89b-12d3-a456-426614174000",
+  name: "Acme Corporation",
+  domain: "acme.com",
+  isActive: true,
+  createdAtUtc: "2024-01-15T10:30:00Z"
+};
+
+const mockRecentEmails: EmailDto[] = [
+  {
+    id: "email-1",
+    tenantId: mockTenant.tenantId,
+    fromAddress: "noreply@acme.com",
+    toAddresses: ["user@example.com"],
+    subject: "Welcome to our service",
+    status: "Sent",
+    errorMessage: null,
+    queuedAt: "2024-12-20T14:30:00Z",
+    sentAt: "2024-12-20T14:30:15Z",
+    attemptCount: 1,
+    bodySnippet: "Thank you for signing up! We're excited to have you...",
+    isHtml: true
+  },
+  {
+    id: "email-2", 
+    tenantId: mockTenant.tenantId,
+    fromAddress: "alerts@acme.com",
+    toAddresses: ["admin@example.com"],
+    subject: "System maintenance notification",
+    status: "Queued",
+    errorMessage: null,
+    queuedAt: "2024-12-20T15:00:00Z",
+    sentAt: null,
+    attemptCount: 0,
+    bodySnippet: "Scheduled maintenance will occur tonight from 11 PM...",
+    isHtml: true
+  },
+  {
+    id: "email-3",
+    tenantId: mockTenant.tenantId,
+    fromAddress: "support@acme.com", 
+    toAddresses: ["customer@example.com"],
+    subject: "Your support ticket has been resolved",
+    status: "Failed",
+    errorMessage: "SMTP connection timeout",
+    queuedAt: "2024-12-20T13:45:00Z",
+    sentAt: null,
+    attemptCount: 3,
+    bodySnippet: "Hi there! Your support ticket #12345 has been...",
+    isHtml: true
+  }
+];
+
+const mockEmailConfigurations: EmailConfiguration[] = [
+  {
+    emailConfigurationId: "config-1",
+    tenantId: mockTenant.tenantId,
+    smtpHost: "smtp.gmail.com",
+    smtpPort: 587,
+    useSsl: true,
+    username: "noreply@acme.com",
+    fromEmail: "noreply@acme.com",
+    displayName: "Acme Notifications",
+    createdAtUtc: "2024-01-15T10:35:00Z"
+  }
+];
 
 export default function Dashboard() {
   const { user } = useUser();
 
+  // Calculate basic stats from mock data
+  const totalEmails = mockRecentEmails.length;
+  const sentEmails = mockRecentEmails.filter(email => email.status === 'Sent').length;
+  const failedEmails = mockRecentEmails.filter(email => email.status === 'Failed').length;
+  const queuedEmails = mockRecentEmails.filter(email => email.status === 'Queued').length;
+  
+  const successRate = totalEmails > 0 ? Math.round((sentEmails / totalEmails) * 100) : 0;
+
   return (
-    <div className="space-y-8">
-      {/* Header Section */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
-          Dashboard
-        </h1>
-        <p className="text-gray-600" style={{ fontFamily: 'Nunito, sans-serif' }}>
-          Welcome back, {user?.firstName || 'User'}! Here's your email service overview.
-        </p>
-      </div>
-
-      {/* Stats Section */}
-      <section>
-        <h2 className="text-xl font-semibold text-gray-900 mb-4" style={{ fontFamily: 'Nunito, sans-serif' }}>
-          Overview
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Placeholder stat cards */}
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-            <div className="text-sm text-gray-600 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
-              Total Emails Sent
-            </div>
-            <div className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-              --
-            </div>
-          </div>
-          
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-            <div className="text-sm text-gray-600 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
-              Active Configurations
-            </div>
-            <div className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-              --
-            </div>
-          </div>
-          
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-            <div className="text-sm text-gray-600 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
-              Success Rate
-            </div>
-            <div className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-              --%
-            </div>
-          </div>
-          
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-            <div className="text-sm text-gray-600 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
-              This Month
-            </div>
-            <div className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-              --
-            </div>
-          </div>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            Dashboard Overview
+          </h1>
+          <p className="text-gray-600 mt-1">Welcome back, {user?.firstName || 'User'}! Here's your {mockTenant.name} overview.</p>
         </div>
-      </section>
-
-      {/* Email Configurations Section */}
-      <section>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-            Email Configurations
-          </h2>
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors duration-200" style={{ fontFamily: 'Nunito, sans-serif' }}>
-            Add Configuration
+        <div className="flex items-center space-x-3">
+          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+            mockTenant.isActive 
+              ? 'bg-green-100 text-green-800' 
+              : 'bg-red-100 text-red-800'
+          }`}>
+            {mockTenant.isActive ? 'Active' : 'Inactive'}
+          </span>
+          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium">
+            Send Email
           </button>
         </div>
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="p-6 text-center text-gray-500" style={{ fontFamily: 'Nunito, sans-serif' }}>
-            No configurations yet. Add your first SMTP configuration to get started.
-          </div>
-        </div>
-      </section>
+      </div>
 
-      {/* Recent Activity Section */}
-      <section>
-        <h2 className="text-xl font-semibold text-gray-900 mb-4" style={{ fontFamily: 'Nunito, sans-serif' }}>
-          Recent Activity
-        </h2>
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="p-6 text-center text-gray-500" style={{ fontFamily: 'Nunito, sans-serif' }}>
-            No recent activity to display.
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="flex items-center">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <span className="text-blue-600 text-lg">📧</span>
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600">Total Emails</p>
+              <p className="text-2xl font-bold text-gray-900">{totalEmails}</p>
+            </div>
           </div>
         </div>
-      </section>
 
-      {/* Analytics Section */}
-      <section>
-        <h2 className="text-xl font-semibold text-gray-900 mb-4" style={{ fontFamily: 'Nunito, sans-serif' }}>
-          Analytics
-        </h2>
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="p-6 text-center text-gray-500" style={{ fontFamily: 'Nunito, sans-serif' }}>
-            Analytics charts will appear here.
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="flex items-center">
+            <div className="p-2 bg-green-100 rounded-lg">
+              <span className="text-green-600 text-lg">✅</span>
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600">Sent</p>
+              <p className="text-2xl font-bold text-gray-900">{sentEmails}</p>
+            </div>
           </div>
         </div>
-      </section>
+
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="flex items-center">
+            <div className="p-2 bg-yellow-100 rounded-lg">
+              <span className="text-yellow-600 text-lg">⏳</span>
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600">Queued</p>
+              <p className="text-2xl font-bold text-gray-900">{queuedEmails}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="flex items-center">
+            <div className="p-2 bg-red-100 rounded-lg">
+              <span className="text-red-600 text-lg">❌</span>
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-600">Failed</p>
+              <p className="text-2xl font-bold text-gray-900">{failedEmails}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Success Rate */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{ fontFamily: 'Nunito, sans-serif' }}>
+          Success Rate
+        </h3>
+        <div className="flex items-center">
+          <div className="flex-1 bg-gray-200 rounded-full h-3">
+            <div 
+              className="bg-green-500 h-3 rounded-full transition-all duration-300"
+              style={{ width: `${successRate}%` }}
+            />
+          </div>
+          <span className="ml-4 text-2xl font-bold text-gray-900">{successRate}%</span>
+        </div>
+      </div>
+
+      {/* Recent Emails */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div className="px-6 py-4 border-b border-gray-200">
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+              Recent Emails
+            </h3>
+            <a 
+              href="/dashboard/activity" 
+              className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+            >
+              View all →
+            </a>
+          </div>
+        </div>
+        <div className="divide-y divide-gray-200">
+          {mockRecentEmails.map((email) => (
+            <div key={email.id} className="px-6 py-4 hover:bg-gray-50">
+              <div className="flex items-center justify-between">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center space-x-3">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                      email.status === 'Sent' 
+                        ? 'bg-green-100 text-green-800'
+                        : email.status === 'Failed'
+                        ? 'bg-red-100 text-red-800'
+                        : 'bg-yellow-100 text-yellow-800'
+                    }`}>
+                      {email.status}
+                    </span>
+                    <p className="text-sm font-medium text-gray-900 truncate">
+                      {email.subject}
+                    </p>
+                  </div>
+                  <div className="mt-1 flex items-center space-x-4 text-sm text-gray-500">
+                    <span>To: {email.toAddresses?.[0]}</span>
+                    <span>From: {email.fromAddress}</span>
+                    <span>
+                      {new Date(email.queuedAt).toLocaleDateString()} at{' '}
+                      {new Date(email.queuedAt).toLocaleTimeString()}
+                    </span>
+                  </div>
+                  {email.bodySnippet && (
+                    <p className="mt-1 text-sm text-gray-600 truncate">
+                      {email.bodySnippet}
+                    </p>
+                  )}
+                </div>
+                <div className="flex items-center space-x-2">
+                  {email.errorMessage && (
+                    <span className="text-xs text-red-600" title={email.errorMessage}>
+                      Error: {email.errorMessage}
+                    </span>
+                  )}
+                  <button className="text-blue-600 hover:text-blue-800 text-sm">
+                    View Details
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Email Configurations Summary */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            Email Configurations
+          </h3>
+          <a 
+            href="/dashboard/configurations" 
+            className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+          >
+            Manage →
+          </a>
+        </div>
+        <div className="space-y-3">
+          {mockEmailConfigurations.map((config) => (
+            <div key={config.emailConfigurationId} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div>
+                <p className="font-medium text-gray-900">{config.displayName}</p>
+                <p className="text-sm text-gray-600">{config.fromEmail} via {config.smtpHost}</p>
+              </div>
+              <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded">
+                Active
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
