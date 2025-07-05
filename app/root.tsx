@@ -1,3 +1,9 @@
+import "@fontsource/nunito/400.css";
+import "@fontsource/nunito/600.css";
+import "@fontsource/nunito/800.css";
+import "@fontsource/nunito/900.css";
+import "@fontsource/comfortaa/700.css";
+
 import {
   isRouteErrorResponse,
   Links,
@@ -8,10 +14,8 @@ import {
 } from "react-router";
 import { rootAuthLoader } from '@clerk/react-router/ssr.server'
 import "./app.css";
-import { ClerkProvider, SignedIn, SignedOut, UserButton, SignInButton } from '@clerk/react-router'
+import { ClerkProvider } from '@clerk/react-router'
 import type { Route } from "./routes/+types/home";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 
 export async function loader(args: Route.LoaderArgs) {
   return rootAuthLoader(args)
@@ -40,9 +44,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <Header/>
         {children}
-        <Footer/>
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -51,15 +53,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App({ loaderData}: Route.ComponentProps) {
- return (
+  return (
     <ClerkProvider
       loaderData={loaderData}
       signUpFallbackRedirectUrl="/"
       signInFallbackRedirectUrl="/"
     >
-      <main>
-        <Outlet />
-      </main>
+      <Outlet />
     </ClerkProvider>
   )
 }
