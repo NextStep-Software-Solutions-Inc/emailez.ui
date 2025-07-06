@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Line, LineChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import type { Tenant } from '@/types/tenant.types';
 
 interface AnalyticsProps {
@@ -18,6 +20,52 @@ export function Analytics({ tenant }: AnalyticsProps) {
     clickRate: 3.2,
     bounceRate: 2.1,
     unsubscribeRate: 0.8
+  };
+
+  // Mock chart data based on selected time range
+  const getChartData = () => {
+    const baseData = {
+      '7d': [
+        { date: 'Dec 30', sent: 45, failed: 2 },
+        { date: 'Dec 31', sent: 38, failed: 1 },
+        { date: 'Jan 1', sent: 52, failed: 3 },
+        { date: 'Jan 2', sent: 67, failed: 2 },
+        { date: 'Jan 3', sent: 89, failed: 4 },
+        { date: 'Jan 4', sent: 73, failed: 1 },
+        { date: 'Jan 5', sent: 91, failed: 5 },
+      ],
+      '30d': [
+        { date: 'Dec 7', sent: 145, failed: 8 },
+        { date: 'Dec 14', sent: 162, failed: 12 },
+        { date: 'Dec 21', sent: 178, failed: 6 },
+        { date: 'Dec 28', sent: 134, failed: 9 },
+        { date: 'Jan 4', sent: 189, failed: 7 },
+      ],
+      '90d': [
+        { date: 'Oct 7', sent: 421, failed: 23 },
+        { date: 'Oct 21', sent: 387, failed: 18 },
+        { date: 'Nov 4', sent: 456, failed: 31 },
+        { date: 'Nov 18', sent: 398, failed: 15 },
+        { date: 'Dec 2', sent: 512, failed: 28 },
+        { date: 'Dec 16', sent: 467, failed: 19 },
+        { date: 'Dec 30', sent: 523, failed: 22 },
+      ],
+    };
+    return baseData[selectedTimeRange];
+  };
+
+  const chartData = getChartData();
+
+  // Chart configuration for ShadCN/UI
+  const chartConfig = {
+    sent: {
+      label: 'Sent Emails',
+      color: 'hsl(var(--chart-1))',
+    },
+    failed: {
+      label: 'Failed Emails',
+      color: 'hsl(var(--chart-2))',
+    },
   };
 
   const timeRangeOptions = [
@@ -134,11 +182,68 @@ export function Analytics({ tenant }: AnalyticsProps) {
         </div>
       </div>
 
-      {/* Performance Chart Placeholder */}
+      {/* Performance Chart */}
       <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Email Volume Over Time</h2>
-        <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
-          <p className="text-gray-500">Chart visualization would go here</p>
+        <ChartContainer config={chartConfig} className="h-64 w-full">
+          <LineChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis 
+              dataKey="date" 
+              axisLine={false}
+              tickLine={false}
+              tickMargin={8}
+              tick={{ fontSize: 12 }}
+            />
+            <YAxis 
+              axisLine={false}
+              tickLine={false}
+              tickMargin={8}
+              tick={{ fontSize: 12 }}
+            />
+            <ChartTooltip
+              content={<ChartTooltipContent />}
+            />
+            <Line
+              type="monotone"
+              dataKey="sent"
+              stroke="#3b82f6"
+              strokeWidth={2}
+              dot={{ r: 4 }}
+              activeDot={{ r: 6 }}
+            />
+            <Line
+              type="monotone"
+              dataKey="failed"
+              stroke="#ef4444"
+              strokeWidth={2}
+              strokeDasharray="5 5"
+              dot={{ r: 3 }}
+              activeDot={{ r: 5 }}
+            />
+          </LineChart>
+        </ChartContainer>
+        
+        {/* Chart Summary */}
+        <div className="flex flex-col sm:flex-row items-center justify-between mt-4 space-y-2 sm:space-y-0">
+          <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-0.5 bg-blue-500"></div>
+              <span className="text-sm text-gray-600">Sent Emails</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-0.5 bg-red-500" style={{ borderTop: '2px dashed #ef4444' }}></div>
+              <span className="text-sm text-gray-600">Failed Emails</span>
+            </div>
+          </div>
+          <div className="flex items-center space-x-4 text-sm">
+            <span className="text-gray-600">
+              Total Sent: <span className="font-semibold text-blue-600">{chartData.reduce((sum, d) => sum + d.sent, 0)}</span>
+            </span>
+            <span className="text-gray-600">
+              Total Failed: <span className="font-semibold text-red-600">{chartData.reduce((sum, d) => sum + d.failed, 0)}</span>
+            </span>
+          </div>
         </div>
       </div>
 

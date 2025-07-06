@@ -172,7 +172,7 @@ export function Configurations({ tenant, configurations }: ConfigurationsProps) 
           </div>
         </div>
       ) : (
-        <div className="config-card-grid">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6">
           {configurations.map((config) => (
             <ConfigurationCard
               key={config.emailConfigurationId}

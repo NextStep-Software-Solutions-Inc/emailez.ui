@@ -21,14 +21,14 @@ export function DashboardOverview({ tenant, recentEmails, emailConfigurations }:
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+      <div className="flex flex-col space-y-4 sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate" style={{ fontFamily: 'Nunito, sans-serif' }}>
             Dashboard Overview
           </h1>
-          <p className="text-gray-600 mt-1">Welcome back, {user?.firstName || 'User'}! Here's your {tenant.name} overview.</p>
+          <p className="text-sm sm:text-base text-gray-600 mt-1">Welcome back, {user?.firstName || 'User'}! Here's your {tenant.name} overview.</p>
         </div>
-        <div className="flex items-center space-x-3">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 flex-shrink-0">
           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
             tenant.isActive 
               ? 'bg-green-100 text-green-800' 
@@ -36,7 +36,7 @@ export function DashboardOverview({ tenant, recentEmails, emailConfigurations }:
           }`}>
             {tenant.isActive ? 'Active' : 'Inactive'}
           </span>
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium">
+          <button className="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium text-center">
             Send Email
           </button>
         </div>
@@ -111,14 +111,14 @@ export function DashboardOverview({ tenant, recentEmails, emailConfigurations }:
 
       {/* Recent Emails */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <div className="flex justify-between items-center">
+        <div className="px-3 sm:px-6 py-4 border-b border-gray-200">
+          <div className="flex flex-col space-y-2 sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
             <h3 className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
               Recent Emails
             </h3>
             <a 
               href="/dashboard/activity" 
-              className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+              className="text-blue-600 hover:text-blue-800 text-sm font-medium self-start sm:self-auto"
             >
               View all →
             </a>
@@ -126,11 +126,11 @@ export function DashboardOverview({ tenant, recentEmails, emailConfigurations }:
         </div>
         <div className="divide-y divide-gray-200">
           {recentEmails.map((email) => (
-            <div key={email.id} className="px-6 py-4 hover:bg-gray-50">
-              <div className="flex items-center justify-between">
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center space-x-3">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+            <div key={email.id} className="px-3 sm:px-6 py-4 hover:bg-gray-50">
+              <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
+                <div className="flex-1 min-w-0 space-y-2">
+                  <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium self-start ${
                       email.status === 'Sent' 
                         ? 'bg-green-100 text-green-800'
                         : email.status === 'Failed'
@@ -143,27 +143,27 @@ export function DashboardOverview({ tenant, recentEmails, emailConfigurations }:
                       {email.subject}
                     </p>
                   </div>
-                  <div className="mt-1 flex items-center space-x-4 text-sm text-gray-500">
-                    <span>To: {email.toAddresses?.[0]}</span>
-                    <span>From: {email.fromAddress}</span>
-                    <span>
+                  <div className="flex flex-col space-y-1 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4 text-xs sm:text-sm text-gray-500">
+                    <span className="truncate">To: {email.toAddresses?.[0]}</span>
+                    <span className="truncate">From: {email.fromAddress}</span>
+                    <span className="whitespace-nowrap">
                       {new Date(email.queuedAt).toLocaleDateString()} at{' '}
                       {new Date(email.queuedAt).toLocaleTimeString()}
                     </span>
                   </div>
                   {email.bodySnippet && (
-                    <p className="mt-1 text-sm text-gray-600 truncate">
+                    <p className="text-sm text-gray-600 truncate">
                       {email.bodySnippet}
                     </p>
                   )}
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 flex-shrink-0">
                   {email.errorMessage && (
-                    <span className="text-xs text-red-600" title={email.errorMessage}>
+                    <span className="text-xs text-red-600 break-words sm:truncate max-w-xs" title={email.errorMessage}>
                       Error: {email.errorMessage}
                     </span>
                   )}
-                  <button className="text-blue-600 hover:text-blue-800 text-sm">
+                  <button className="text-blue-600 hover:text-blue-800 text-sm font-medium whitespace-nowrap">
                     View Details
                   </button>
                 </div>
