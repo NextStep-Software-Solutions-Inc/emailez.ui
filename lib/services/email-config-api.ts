@@ -8,6 +8,10 @@ import type {
 
 // Email Configuration API calls
 export const emailConfigApi = {
+  setAuthToken: (token: string | null) => {
+    httpClient.setTokenGetter(() => token);
+  },
+
   // GET /api/v1/workspaces/{workspaceId}/email-configurations
   getAllEmailConfigurations: async (workspaceId: string): Promise<EmailConfiguration[]> => {
     return httpClient.get<EmailConfiguration[]>(`/api/v1/workspaces/${workspaceId}/email-configurations`);

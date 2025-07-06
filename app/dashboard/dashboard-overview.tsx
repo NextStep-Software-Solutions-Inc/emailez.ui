@@ -1,17 +1,21 @@
 import { useUser } from '@clerk/react-router';
-import { useWorkspace } from '@/lib/contexts/WorkspaceContext';
-import type { EmailDto, EmailConfiguration } from '@/types/index';
+import type { EmailDto, EmailConfiguration, Workspace } from '@/types/index';
 import { Button } from '@/components/ui/button';
 
-
 interface DashboardOverviewProps {
+  workspaces: Workspace[];
+  currentWorkspace: Workspace | null;
   recentEmails: EmailDto[];
   emailConfigurations: EmailConfiguration[];
 }
 
-export function DashboardOverview({ recentEmails, emailConfigurations }: DashboardOverviewProps) {
+export function DashboardOverview({ 
+  workspaces, 
+  currentWorkspace, 
+  recentEmails, 
+  emailConfigurations 
+}: DashboardOverviewProps) {
   const { user } = useUser();
-  const { currentWorkspace } = useWorkspace();
 
   if (!currentWorkspace) {
     return (
@@ -128,7 +132,7 @@ export function DashboardOverview({ recentEmails, emailConfigurations }: Dashboa
               Recent Emails
             </h3>
             <a 
-              href="/dashboard/activity" 
+              href={`/workspace/${currentWorkspace.workspaceId}/activity`}
               className="text-blue-600 hover:text-blue-800 text-sm font-medium self-start sm:self-auto"
             >
               View all →
@@ -194,7 +198,7 @@ export function DashboardOverview({ recentEmails, emailConfigurations }: Dashboa
             Email Configurations
           </h3>
           <a 
-            href="/dashboard/configurations" 
+            href={`/workspace/${currentWorkspace.workspaceId}/configurations`}
             className="text-blue-600 hover:text-blue-800 text-sm font-medium"
           >
             Manage →

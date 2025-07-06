@@ -13,32 +13,32 @@ interface DashboardLayoutProps {
 
 const navigationItems = [
   { 
-    href: "/dashboard", 
+    path: "", 
     label: "Overview", 
     icon: "📊"
   },
   { 
-    href: "/dashboard/compose", 
+    path: "/compose", 
     label: "Compose", 
     icon: "✉️"
   },
   { 
-    href: "/dashboard/configurations", 
+    path: "/configurations", 
     label: "Configurations", 
     icon: "⚙️"
   },
   { 
-    href: "/dashboard/analytics", 
+    path: "/analytics", 
     label: "Analytics", 
     icon: "📈"
   },
   { 
-    href: "/dashboard/activity", 
+    path: "/activity", 
     label: "Activity", 
     icon: "📋"
   },
   { 
-    href: "/dashboard/settings", 
+    path: "/settings", 
     label: "Settings", 
     icon: "🔧"
   }
@@ -49,11 +49,19 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const { currentWorkspace, workspaces, isLoading, hasCompletedOnboarding } = useWorkspace();
   const location = useLocation();
 
-  const isActive = (href: string) => {
-    if (href === '/dashboard') {
-      return location.pathname === '/dashboard';
+  const isActive = (path: string) => {
+    if (!currentWorkspace) return false;
+    
+    const fullPath = `/workspace/${currentWorkspace.workspaceId}${path}`;
+    if (path === '') {
+      return location.pathname === `/workspace/${currentWorkspace.workspaceId}`;
     }
-    return location.pathname.startsWith(href);
+    return location.pathname.startsWith(fullPath);
+  };
+
+  const getNavigationUrl = (path: string) => {
+    if (!currentWorkspace) return '#';
+    return `/workspace/${currentWorkspace.workspaceId}${path}`;
   };
 
   if (isLoading) {
@@ -179,11 +187,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
               {navigationItems.map((item) => (
                 <a
-                  key={item.href}
-                  href={item.href}
+                  key={item.path}
+                  href={getNavigationUrl(item.path)}
                   className={cn(
                     "flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors group",
-                    isActive(item.href)
+                    isActive(item.path)
                       ? "bg-blue-50 text-blue-700 border-r-2 border-blue-600"
                       : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
                   )}

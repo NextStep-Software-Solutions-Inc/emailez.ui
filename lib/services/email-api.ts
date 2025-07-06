@@ -9,6 +9,10 @@ import type { PaginatedList } from '@/types/common.types';
 
 // Email API calls
 export const emailApi = {
+
+  setAuthToken: (token: string | null) => {
+    httpClient.setTokenGetter(() => token);
+  },
   // GET /api/v1/workspaces/{workspaceId}/emails
   getEmailsForWorkspace: async (workspaceId: string, filters: EmailFilters = {}): Promise<PaginatedList<EmailDto>> => {
     const params: Record<string, string | number | boolean> = {};

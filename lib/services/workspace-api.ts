@@ -14,7 +14,7 @@ export const workspaceApi = {
 
   // GET /api/v1/user/workspaces
   getUserWorkspaces: async (): Promise<Workspace[]> => {
-    return httpClient.get<Workspace[]>('/api/v1/tenants',);
+    return httpClient.get<Workspace[]>('/api/v1/workspaces',);
   },
 
   // POST /api/v1/workspaces

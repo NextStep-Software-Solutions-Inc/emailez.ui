@@ -1,6 +1,9 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { useAuth } from '@clerk/react-router';
+import { useParams, useNavigate } from 'react-router';
 import type { ReactNode } from 'react';
 import type { Workspace, CreateWorkspaceCommand, CreateWorkspaceResponse } from '@/types/index';
+import { workspaceApi } from '@/lib/services';
 
 interface WorkspaceContextType {
   // Current active workspace
@@ -33,6 +36,11 @@ interface WorkspaceProviderProps {
 }
 
 export function WorkspaceProvider({ children }: WorkspaceProviderProps) {
+  const { getToken } = useAuth();
+  const navigate = useNavigate();
+  const params = useParams();
+  const currentWorkspaceId = params.workspaceId;
+  
   const [currentWorkspace, setCurrentWorkspace] = useState<Workspace | null>(null);
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -45,36 +53,42 @@ export function WorkspaceProvider({ children }: WorkspaceProviderProps) {
       setIsLoading(true);
       setError(null);
       
-      // TODO: Replace with actual API call to get current user's workspaces
-      // const response = await fetch('/api/v1/user/workspaces', {
-      //   headers: {
-      //     'Authorization': `Bearer ${token}`,
-      //   },
-      // });
+      // Get the auth token from Clerk
+      const token = await getToken();
+      if (!token) {
+        // User not authenticated, set empty state
+        setWorkspaces([]);
+        setCurrentWorkspace(null);
+        setHasCompletedOnboarding(false);
+        return;
+      }
       
-      // Simulate API call - check if user has workspaces
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Set the token for API calls
+      workspaceApi.setAuthToken(token);
       
-      // Mock: Get user's workspaces from localStorage
-      const userWorkspaces = localStorage.getItem('userWorkspaces');
-      const currentWorkspaceId = localStorage.getItem('currentWorkspaceId');
+      // Fetch workspaces from API
+      const userWorkspaces = await workspaceApi.getUserWorkspaces();
       
-      if (userWorkspaces) {
-        const mockWorkspaces: Workspace[] = JSON.parse(userWorkspaces);
-        setWorkspaces(mockWorkspaces);
+      if (userWorkspaces && userWorkspaces.length > 0) {
+        setWorkspaces(userWorkspaces);
         
-        // Set current workspace
+        // Find current workspace from URL
         if (currentWorkspaceId) {
-          const activeWorkspace = mockWorkspaces.find(w => w.workspaceId === currentWorkspaceId);
+          const activeWorkspace = userWorkspaces.find(w => w.workspaceId === currentWorkspaceId);
           if (activeWorkspace) {
             setCurrentWorkspace(activeWorkspace);
+            setHasCompletedOnboarding(true);
           } else {
-            // If stored workspace ID doesn't exist, use first workspace
-            setCurrentWorkspace(mockWorkspaces[0] || null);
+            // Workspace ID in URL doesn't exist, redirect to first workspace
+            const firstWorkspace = userWorkspaces[0];
+            navigate(`/workspace/${firstWorkspace.workspaceId}`, { replace: true });
+            return;
           }
         } else {
-          // No current workspace set, use first one
-          setCurrentWorkspace(mockWorkspaces[0] || null);
+          // No workspace in URL, redirect to first workspace
+          const firstWorkspace = userWorkspaces[0];
+          navigate(`/workspace/${firstWorkspace.workspaceId}`, { replace: true });
+          return;
         }
         
         setHasCompletedOnboarding(true);
@@ -95,27 +109,25 @@ export function WorkspaceProvider({ children }: WorkspaceProviderProps) {
       setIsOperationLoading(true);
       setError(null);
       
-      // TODO: Replace with actual API call
-      // const response = await api.workspaces.createWorkspace(data);
+      // Get the auth token from Clerk
+      const token = await getToken();
+      if (!token) {
+        throw new Error('No authentication token available');
+      }
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Set the token for API calls
+      workspaceApi.setAuthToken(token);
       
+      // Create workspace via API
+      const response = await workspaceApi.createWorkspace(data);
+      
+      // Create workspace object from response
       const newWorkspace: Workspace = {
-        workspaceId: `workspace-${Date.now()}`,
-        name: data.name,
-        domain: data.domain,
+        workspaceId: response.workspaceId,
+        name: response.name,
+        domain: response.domain,
         isActive: true,
         createdAtUtc: new Date().toISOString(),
-      };
-      
-      const response: CreateWorkspaceResponse = {
-        workspaceId: newWorkspace.workspaceId,
-        name: newWorkspace.name,
-        domain: newWorkspace.domain,
-        apiKey: `api-key-${Date.now()}`,
-        isSuccess: true,
-        message: 'Workspace created successfully',
       };
       
       // Add to workspaces array
@@ -124,9 +136,10 @@ export function WorkspaceProvider({ children }: WorkspaceProviderProps) {
       setCurrentWorkspace(newWorkspace);
       setHasCompletedOnboarding(true);
       
-      // Store in localStorage for demo purposes
-      localStorage.setItem('userWorkspaces', JSON.stringify(updatedWorkspaces));
-      localStorage.setItem('currentWorkspaceId', newWorkspace.workspaceId);
+      // Navigate to the new workspace
+      navigate(`/workspace/${newWorkspace.workspaceId}` , {
+        replace: true
+      });
       
       return response;
     } catch (err) {
@@ -144,11 +157,25 @@ export function WorkspaceProvider({ children }: WorkspaceProviderProps) {
       setIsOperationLoading(true);
       setError(null);
       
-      // TODO: Replace with actual API call
-      // await api.workspaces.updateWorkspace(currentWorkspace.workspaceId, data);
+      // Get the auth token from Clerk
+      const token = await getToken();
+      if (!token) {
+        throw new Error('No authentication token available');
+      }
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Set the token for API calls
+      workspaceApi.setAuthToken(token);
+      
+      // Convert to UpdateWorkspaceCommand
+      const updateData = {
+        id: currentWorkspace.workspaceId,
+        name: data.name,
+        domain: data.domain,
+        isActive: currentWorkspace.isActive,
+      };
+      
+      // Update workspace via API
+      await workspaceApi.updateWorkspace(currentWorkspace.workspaceId, updateData);
       
       const updatedWorkspace: Workspace = {
         ...currentWorkspace,
@@ -164,8 +191,6 @@ export function WorkspaceProvider({ children }: WorkspaceProviderProps) {
         w.workspaceId === currentWorkspace.workspaceId ? updatedWorkspace : w
       );
       setWorkspaces(updatedWorkspaces);
-      
-      localStorage.setItem('userWorkspaces', JSON.stringify(updatedWorkspaces));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update workspace');
       throw err;
@@ -184,8 +209,25 @@ export function WorkspaceProvider({ children }: WorkspaceProviderProps) {
         throw new Error('Workspace not found');
       }
       
+      // Navigate to the new workspace URL
+      const currentPath = window.location.pathname;
+      const pathSegments = currentPath.split('/');
+      
+      // Replace the workspace ID in the URL
+      if (pathSegments.length >= 3 && pathSegments[1] === 'workspace') {
+        pathSegments[2] = workspaceId;
+        const newPath = pathSegments.join('/');
+        navigate(newPath, {
+          replace: true,
+        });
+      } else {
+        // Fallback to dashboard
+        navigate(`/workspace/${workspaceId}`, {
+          replace: true,
+        });
+      }
+      
       setCurrentWorkspace(targetWorkspace);
-      localStorage.setItem('currentWorkspaceId', workspaceId);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to switch workspace');
       throw err;
@@ -201,6 +243,16 @@ export function WorkspaceProvider({ children }: WorkspaceProviderProps) {
   useEffect(() => {
     fetchUserWorkspaces();
   }, []);
+
+  // Effect to sync current workspace when URL changes
+  useEffect(() => {
+    if (workspaces.length > 0 && currentWorkspaceId) {
+      const workspace = workspaces.find(w => w.workspaceId === currentWorkspaceId);
+      if (workspace && workspace.workspaceId !== currentWorkspace?.workspaceId) {
+        setCurrentWorkspace(workspace);
+      }
+    }
+  }, [currentWorkspaceId, workspaces, currentWorkspace]);
 
   return (
     <WorkspaceContext.Provider

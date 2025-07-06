@@ -8,13 +8,18 @@ export default [
         route("docs", "routes/public/docs.tsx"),
         route("support", "routes/public/support.tsx"),
     ]),
+    // Legacy dashboard route - redirects to workspace-specific URL
+    route("dashboard", "routes/dashboard-redirect.tsx"),
+    // Workspace-specific dashboard routes
     layout("routes/dashboard.layout.tsx", [
-        route("dashboard", "routes/dashboard/index.tsx"),
-        route("dashboard/compose", "routes/dashboard/compose.tsx"),
-        route("dashboard/configurations", "routes/dashboard/configurations.tsx"),
-        route("dashboard/analytics", "routes/dashboard/analytics.tsx"),
-        route("dashboard/activity", "routes/dashboard/activity.tsx"),
-        route("dashboard/settings", "routes/dashboard/settings.tsx"),
+        // Onboarding route for new users
+        route("onboarding", "routes/onboarding.tsx"),
+        route("workspace/:workspaceId", "routes/dashboard/index.tsx"),
+        route("workspace/:workspaceId/compose", "routes/dashboard/compose.tsx"),
+        route("workspace/:workspaceId/configurations", "routes/dashboard/configurations.tsx"),
+        route("workspace/:workspaceId/analytics", "routes/dashboard/analytics.tsx"),
+        route("workspace/:workspaceId/activity", "routes/dashboard/activity.tsx"),
+        route("workspace/:workspaceId/settings", "routes/dashboard/settings.tsx"),
     ])
 
 ] satisfies RouteConfig;

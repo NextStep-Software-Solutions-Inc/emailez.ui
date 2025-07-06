@@ -17,7 +17,7 @@ class HttpClient {
   constructor(baseUrl: string = API_BASE_URL) {
     this.baseUrl = baseUrl;
     this.defaultHeaders = {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     };
   }
 
@@ -78,7 +78,7 @@ class HttpClient {
         },
         ...fetchOptions,
       });
-
+     
       clearTimeout(timeoutId);
 
       if (!response.ok) {
