@@ -8,7 +8,7 @@ import { useState, useRef } from "react";
 import { useHeaderScroll } from "hooks/useHeaderScroll";
 import { useClickOutside } from "hooks/useClickOutside";
 import { SignedIn, SignedOut, SignInButton } from '@clerk/react-router';
-import { cn } from '../lib/utils';
+import { cn } from '@/utils';
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

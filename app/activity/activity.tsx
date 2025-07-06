@@ -1,13 +1,6 @@
 import { useState } from 'react';
-import type { EmailDto } from '../../lib/types';
-import { EMAIL_STATUS } from '../../lib/types';
-
-export function meta() {
-  return [
-    { title: "Activity - Email EZ" },
-    { name: "description", content: "View recent email activity and logs" },
-  ];
-}
+import type { EmailDto } from '@/types/index';
+import { EMAIL_STATUS } from '@/types/index';
 
 // Mock data for email activity
 const mockEmails: EmailDto[] = [
@@ -84,7 +77,7 @@ const getStatusColor = (status: string) => {
   }
 };
 
-export default function DashboardActivity() {
+export function Activity() {
   const [emails, setEmails] = useState<EmailDto[]>(mockEmails);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');

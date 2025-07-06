@@ -2,7 +2,7 @@ import UserAvatar from "./UserAvatar";
 import { SignedIn } from '@clerk/react-router';
 import { useState } from 'react';
 import { useLocation } from 'react-router';
-import { cn } from '../lib/utils';
+import { cn } from '@/utils';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;

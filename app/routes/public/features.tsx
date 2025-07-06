@@ -1,4 +1,6 @@
-export function meta() {
+import type { Route } from "./+types/features";
+
+export function meta({}: Route.MetaArgs) {
   return [
     { title: "Features - Email EZ" },
     { name: "description", content: "Discover all the powerful features of Email EZ" },

@@ -2,7 +2,7 @@ import NavigationLink from "./NavigationLink";
 import Button from "./Button";
 import UserAvatar from "./UserAvatar";
 import { SignedIn, SignedOut, SignInButton } from '@clerk/react-router';
-import { cn } from '../lib/utils';
+import { cn } from '@/utils';
 
 interface MobileMenuProps {
   isOpen: boolean;

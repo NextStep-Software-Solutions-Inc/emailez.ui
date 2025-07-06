@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { UserButton, useUser } from '@clerk/react-router';
-import { cn } from '../lib/utils';
+import { cn } from '@/utils';
 
 export default function UserAvatar() {
   const { isLoaded, user } = useUser();

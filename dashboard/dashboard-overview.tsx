@@ -1,89 +1,20 @@
 import { useUser } from '@clerk/react-router';
-import type { Tenant, EmailDto, EmailConfiguration } from '../../lib/types';
+import type { Tenant, EmailDto, EmailConfiguration } from '@/types/index';
 
-export function meta() {
-  return [
-    { title: "Dashboard - Email EZ" },
-    { name: "description", content: "Multi-tenant email service dashboard overview" },
-  ];
+interface DashboardOverviewProps {
+  tenant: Tenant;
+  recentEmails: EmailDto[];
+  emailConfigurations: EmailConfiguration[];
 }
 
-// Mock data - will be replaced with API calls later
-const mockTenant: Tenant = {
-  tenantId: "123e4567-e89b-12d3-a456-426614174000",
-  name: "Acme Corporation",
-  domain: "acme.com",
-  isActive: true,
-  createdAtUtc: "2024-01-15T10:30:00Z"
-};
-
-const mockRecentEmails: EmailDto[] = [
-  {
-    id: "email-1",
-    tenantId: mockTenant.tenantId,
-    fromAddress: "noreply@acme.com",
-    toAddresses: ["user@example.com"],
-    subject: "Welcome to our service",
-    status: "Sent",
-    errorMessage: null,
-    queuedAt: "2024-12-20T14:30:00Z",
-    sentAt: "2024-12-20T14:30:15Z",
-    attemptCount: 1,
-    bodySnippet: "Thank you for signing up! We're excited to have you...",
-    isHtml: true
-  },
-  {
-    id: "email-2", 
-    tenantId: mockTenant.tenantId,
-    fromAddress: "alerts@acme.com",
-    toAddresses: ["admin@example.com"],
-    subject: "System maintenance notification",
-    status: "Queued",
-    errorMessage: null,
-    queuedAt: "2024-12-20T15:00:00Z",
-    sentAt: null,
-    attemptCount: 0,
-    bodySnippet: "Scheduled maintenance will occur tonight from 11 PM...",
-    isHtml: true
-  },
-  {
-    id: "email-3",
-    tenantId: mockTenant.tenantId,
-    fromAddress: "support@acme.com", 
-    toAddresses: ["customer@example.com"],
-    subject: "Your support ticket has been resolved",
-    status: "Failed",
-    errorMessage: "SMTP connection timeout",
-    queuedAt: "2024-12-20T13:45:00Z",
-    sentAt: null,
-    attemptCount: 3,
-    bodySnippet: "Hi there! Your support ticket #12345 has been...",
-    isHtml: true
-  }
-];
-
-const mockEmailConfigurations: EmailConfiguration[] = [
-  {
-    emailConfigurationId: "config-1",
-    tenantId: mockTenant.tenantId,
-    smtpHost: "smtp.gmail.com",
-    smtpPort: 587,
-    useSsl: true,
-    username: "noreply@acme.com",
-    fromEmail: "noreply@acme.com",
-    displayName: "Acme Notifications",
-    createdAtUtc: "2024-01-15T10:35:00Z"
-  }
-];
-
-export default function Dashboard() {
+export function DashboardOverview({ tenant, recentEmails, emailConfigurations }: DashboardOverviewProps) {
   const { user } = useUser();
 
-  // Calculate basic stats from mock data
-  const totalEmails = mockRecentEmails.length;
-  const sentEmails = mockRecentEmails.filter(email => email.status === 'Sent').length;
-  const failedEmails = mockRecentEmails.filter(email => email.status === 'Failed').length;
-  const queuedEmails = mockRecentEmails.filter(email => email.status === 'Queued').length;
+  // Calculate basic stats from email data
+  const totalEmails = recentEmails.length;
+  const sentEmails = recentEmails.filter(email => email.status === 'Sent').length;
+  const failedEmails = recentEmails.filter(email => email.status === 'Failed').length;
+  const queuedEmails = recentEmails.filter(email => email.status === 'Queued').length;
   
   const successRate = totalEmails > 0 ? Math.round((sentEmails / totalEmails) * 100) : 0;
 
@@ -95,15 +26,15 @@ export default function Dashboard() {
           <h1 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
             Dashboard Overview
           </h1>
-          <p className="text-gray-600 mt-1">Welcome back, {user?.firstName || 'User'}! Here's your {mockTenant.name} overview.</p>
+          <p className="text-gray-600 mt-1">Welcome back, {user?.firstName || 'User'}! Here's your {tenant.name} overview.</p>
         </div>
         <div className="flex items-center space-x-3">
           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-            mockTenant.isActive 
+            tenant.isActive 
               ? 'bg-green-100 text-green-800' 
               : 'bg-red-100 text-red-800'
           }`}>
-            {mockTenant.isActive ? 'Active' : 'Inactive'}
+            {tenant.isActive ? 'Active' : 'Inactive'}
           </span>
           <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium">
             Send Email
@@ -194,7 +125,7 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="divide-y divide-gray-200">
-          {mockRecentEmails.map((email) => (
+          {recentEmails.map((email) => (
             <div key={email.id} className="px-6 py-4 hover:bg-gray-50">
               <div className="flex items-center justify-between">
                 <div className="flex-1 min-w-0">
@@ -256,7 +187,7 @@ export default function Dashboard() {
           </a>
         </div>
         <div className="space-y-3">
-          {mockEmailConfigurations.map((config) => (
+          {emailConfigurations.map((config) => (
             <div key={config.emailConfigurationId} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
               <div>
                 <p className="font-medium text-gray-900">{config.displayName}</p>

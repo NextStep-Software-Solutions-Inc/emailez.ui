@@ -1,5 +1,5 @@
 
-import { useElementHeight } from "../../hooks/useElementHeight";
+import { useElementHeight } from "@/hooks/useElementHeight";
 import { SignedIn, SignedOut, SignInButton } from '@clerk/react-router';
 import { Link } from 'react-router';
 

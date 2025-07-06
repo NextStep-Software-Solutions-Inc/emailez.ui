@@ -15,7 +15,7 @@ import {
 import { rootAuthLoader } from '@clerk/react-router/ssr.server'
 import "./app.css";
 import { ClerkProvider } from '@clerk/react-router'
-import type { Route } from "./routes/+types/home";
+import type { Route } from "./+types/root";
 
 export async function loader(args: Route.LoaderArgs) {
   return rootAuthLoader(args)
