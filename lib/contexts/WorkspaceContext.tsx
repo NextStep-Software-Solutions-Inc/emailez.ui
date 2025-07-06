@@ -214,29 +214,31 @@ export function WorkspaceProvider({ children }: WorkspaceProviderProps) {
       // Add a nice delay for the animation (1200ms for better UX)
       await new Promise(resolve => setTimeout(resolve, 1200));
       
-      // Navigate to the new workspace URL
+      // Build the new URL for the workspace
       const currentPath = window.location.pathname;
       const pathSegments = currentPath.split('/');
       
-      // Replace the workspace ID in the URL
+      let newPath: string;
       if (pathSegments.length >= 3 && pathSegments[1] === 'workspace') {
+        // Replace the workspace ID in the URL
         pathSegments[2] = workspaceId;
-        const newPath = pathSegments.join('/');
-        navigate(newPath, {
-          replace: true,
-        });
+        newPath = pathSegments.join('/');
       } else {
         // Fallback to dashboard
-        navigate(`/workspace/${workspaceId}`, {
-          replace: true,
-        });
+        newPath = `/workspace/${workspaceId}`;
       }
       
-      setCurrentWorkspace(targetWorkspace);
+      // Use window.location.replace() to force a full page reload without adding to history
+      // This ensures all route loaders are executed with the new workspace ID
+      // and prevents back/forward navigation to previous workspaces
+      window.location.replace(newPath);
+      
+      console.log("Workspace switched to:", targetWorkspace);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to switch workspace');
       throw err;
     } finally {
+      // Note: this finally block may not execute due to page reload
       setIsSwitchingWorkspace(false); // End switching animation
     }
   };

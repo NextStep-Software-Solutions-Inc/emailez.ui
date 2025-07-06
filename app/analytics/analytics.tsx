@@ -2,29 +2,50 @@ import { useState } from 'react';
 import { Line, LineChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import type { Workspace } from '@/types/workspace.types';
+import type { DetailedAnalytics } from '@/lib/services/analytics-api';
 
 interface AnalyticsProps {
   workspace: Workspace;
+  analytics: DetailedAnalytics | null;
 }
 
-export function Analytics({ workspace }: AnalyticsProps) {
+export function Analytics({ workspace, analytics }: AnalyticsProps) {
   const [selectedTimeRange, setSelectedTimeRange] = useState<'7d' | '30d' | '90d'>('30d');
 
-  // Mock analytics data - in a real app, this would come from props/loader
-  const analyticsData = {
+  // Show demo data message when no real analytics API is available
+  const showDemoData = !analytics;
+  
+  // Use real analytics data or fallback to demo data for development
+  const analyticsData = analytics || {
     totalEmails: 1247,
     sentEmails: 1205,
     failedEmails: 42,
+    queuedEmails: 0,
     deliveryRate: 96.6,
+    successRate: 96.6,
     openRate: 24.3,
     clickRate: 3.2,
     bounceRate: 2.1,
-    unsubscribeRate: 0.8
+    unsubscribeRate: 0.8,
+    trend: []
   };
 
-  // Mock chart data based on selected time range
+  // Use real chart data from analytics trend or fallback to demo data
   const getChartData = () => {
-    const baseData = {
+    if (analytics?.trend && analytics.trend.length > 0) {
+      // Use real trend data from the API
+      return analytics.trend.map(item => ({
+        date: new Date(item.date).toLocaleDateString('en-US', { 
+          month: 'short', 
+          day: 'numeric' 
+        }),
+        sent: item.sent,
+        failed: item.failed
+      }));
+    }
+
+    // Fallback to demo data for development (when no API is available)
+    const demoData = {
       '7d': [
         { date: 'Dec 30', sent: 45, failed: 2 },
         { date: 'Dec 31', sent: 38, failed: 1 },
@@ -51,7 +72,7 @@ export function Analytics({ workspace }: AnalyticsProps) {
         { date: 'Dec 30', sent: 523, failed: 22 },
       ],
     };
-    return baseData[selectedTimeRange];
+    return demoData[selectedTimeRange];
   };
 
   const chartData = getChartData();
@@ -100,6 +121,24 @@ export function Analytics({ workspace }: AnalyticsProps) {
         </div>
       </div>
 
+      {/* Demo Data Notice */}
+      {showDemoData && (
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-yellow-700">
+                <strong>Demo Data:</strong> Analytics API is not yet available. The data shown below is for demonstration purposes only.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Key Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
@@ -147,14 +186,32 @@ export function Analytics({ workspace }: AnalyticsProps) {
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600">Delivery Rate</p>
-              <p className="text-2xl font-bold text-gray-900">{analyticsData.deliveryRate}%</p>
+              <p className="text-sm font-medium text-gray-600">Queued</p>
+              <p className="text-2xl font-bold text-yellow-600">{analyticsData.queuedEmails.toLocaleString()}</p>
             </div>
-            <div className="p-3 bg-purple-100 rounded-full">
-              <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            <div className="p-3 bg-yellow-100 rounded-full">
+              <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Delivery Rate Card */}
+      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900">Delivery Rate</h3>
+            <p className="text-3xl font-bold text-gray-900 mt-2">{analyticsData.deliveryRate.toFixed(1)}%</p>
+            <p className="text-sm text-gray-600 mt-1">
+              Success Rate: {analyticsData.successRate.toFixed(1)}%
+            </p>
+          </div>
+          <div className="p-4 bg-purple-100 rounded-full">
+            <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
           </div>
         </div>
       </div>
@@ -164,19 +221,27 @@ export function Analytics({ workspace }: AnalyticsProps) {
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Engagement Metrics</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="text-center">
-            <p className="text-2xl font-bold text-blue-600">{analyticsData.openRate}%</p>
+            <p className="text-2xl font-bold text-blue-600">
+              {analyticsData.openRate ? `${analyticsData.openRate}%` : 'N/A'}
+            </p>
             <p className="text-sm text-gray-600">Open Rate</p>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-bold text-green-600">{analyticsData.clickRate}%</p>
+            <p className="text-2xl font-bold text-green-600">
+              {analyticsData.clickRate ? `${analyticsData.clickRate}%` : 'N/A'}
+            </p>
             <p className="text-sm text-gray-600">Click Rate</p>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-bold text-yellow-600">{analyticsData.bounceRate}%</p>
+            <p className="text-2xl font-bold text-yellow-600">
+              {analyticsData.bounceRate ? `${analyticsData.bounceRate}%` : 'N/A'}
+            </p>
             <p className="text-sm text-gray-600">Bounce Rate</p>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-bold text-red-600">{analyticsData.unsubscribeRate}%</p>
+            <p className="text-2xl font-bold text-red-600">
+              {analyticsData.unsubscribeRate ? `${analyticsData.unsubscribeRate}%` : 'N/A'}
+            </p>
             <p className="text-sm text-gray-600">Unsubscribe Rate</p>
           </div>
         </div>
@@ -251,36 +316,62 @@ export function Analytics({ workspace }: AnalyticsProps) {
       <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Performance</h2>
         <div className="space-y-3">
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div>
-              <p className="font-medium text-gray-900">Today</p>
-              <p className="text-sm text-gray-600">47 emails sent</p>
-            </div>
-            <div className="text-right">
-              <p className="text-sm font-medium text-green-600">97.9% delivery rate</p>
-              <p className="text-sm text-gray-600">2 failed</p>
-            </div>
-          </div>
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div>
-              <p className="font-medium text-gray-900">Yesterday</p>
-              <p className="text-sm text-gray-600">89 emails sent</p>
-            </div>
-            <div className="text-right">
-              <p className="text-sm font-medium text-green-600">95.5% delivery rate</p>
-              <p className="text-sm text-gray-600">4 failed</p>
-            </div>
-          </div>
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div>
-              <p className="font-medium text-gray-900">Last 7 days</p>
-              <p className="text-sm text-gray-600">432 emails sent</p>
-            </div>
-            <div className="text-right">
-              <p className="text-sm font-medium text-green-600">96.3% delivery rate</p>
-              <p className="text-sm text-gray-600">16 failed</p>
-            </div>
-          </div>
+          {analyticsData.trend && analyticsData.trend.length > 0 ? (
+            analyticsData.trend.slice(-3).reverse().map((item, index) => {
+              const date = new Date(item.date);
+              const deliveryRate = item.sent > 0 ? ((item.sent / (item.sent + item.failed)) * 100).toFixed(1) : '0.0';
+              const dateLabel = index === 0 ? 'Recent' : 
+                               index === 1 ? 'Previous' : 
+                               date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+              
+              return (
+                <div key={item.date} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-gray-900">{dateLabel}</p>
+                    <p className="text-sm text-gray-600">{item.sent} emails sent</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-medium text-green-600">{deliveryRate}% delivery rate</p>
+                    <p className="text-sm text-gray-600">{item.failed} failed</p>
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            // Show demo recent performance data
+            <>
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div>
+                  <p className="font-medium text-gray-900">Today</p>
+                  <p className="text-sm text-gray-600">47 emails sent</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-medium text-green-600">97.9% delivery rate</p>
+                  <p className="text-sm text-gray-600">1 failed</p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div>
+                  <p className="font-medium text-gray-900">Yesterday</p>
+                  <p className="text-sm text-gray-600">89 emails sent</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-medium text-green-600">95.5% delivery rate</p>
+                  <p className="text-sm text-gray-600">4 failed</p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div>
+                  <p className="font-medium text-gray-900">Last 7 days</p>
+                  <p className="text-sm text-gray-600">432 emails sent</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-medium text-green-600">96.3% delivery rate</p>
+                  <p className="text-sm text-gray-600">16 failed</p>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

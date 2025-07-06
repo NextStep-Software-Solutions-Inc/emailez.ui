@@ -1,66 +1,7 @@
 import { useState } from 'react';
-import type { EmailDto } from '@/types/index';
+import type { EmailDto, Workspace } from '@/types/index';
+import type { PaginatedList } from '@/types/common.types';
 import { EMAIL_STATUS } from '@/types/index';
-
-// Mock data for email activity
-const mockEmails: EmailDto[] = [
-  {
-    id: "email-1",
-    workspaceId: "workspace-1",
-    fromAddress: "noreply@example.com",
-    toAddresses: ["user1@example.com"],
-    subject: "Welcome to our service",
-    status: EMAIL_STATUS.SENT,
-    errorMessage: null,
-    queuedAt: "2024-01-15T10:30:00Z",
-    sentAt: "2024-01-15T10:30:15Z",
-    attemptCount: 1,
-    bodySnippet: "Welcome to our service! We're excited to have you on board...",
-    isHtml: true
-  },
-  {
-    id: "email-2",
-    tenantId: "tenant-1",
-    fromAddress: "support@example.com",
-    toAddresses: ["user2@example.com"],
-    subject: "Password reset confirmation",
-    status: EMAIL_STATUS.SENT,
-    errorMessage: null,
-    queuedAt: "2024-01-15T09:15:00Z",
-    sentAt: "2024-01-15T09:15:12Z",
-    attemptCount: 1,
-    bodySnippet: "Your password has been successfully reset. If you did not make this request...",
-    isHtml: true
-  },
-  {
-    id: "email-3",
-    tenantId: "tenant-1",
-    fromAddress: "noreply@example.com",
-    toAddresses: ["user3@example.com"],
-    subject: "Email delivery failed",
-    status: EMAIL_STATUS.FAILED,
-    errorMessage: "SMTP Error: Could not authenticate",
-    queuedAt: "2024-01-15T08:45:00Z",
-    sentAt: null,
-    attemptCount: 3,
-    bodySnippet: "This is a test email that failed to deliver...",
-    isHtml: false
-  },
-  {
-    id: "email-4",
-    tenantId: "tenant-1",
-    fromAddress: "noreply@example.com",
-    toAddresses: ["user4@example.com"],
-    subject: "Order confirmation",
-    status: EMAIL_STATUS.QUEUED,
-    errorMessage: null,
-    queuedAt: "2024-01-15T11:00:00Z",
-    sentAt: null,
-    attemptCount: 0,
-    bodySnippet: "Thank you for your order! Your order #12345 has been confirmed...",
-    isHtml: true
-  }
-];
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -77,17 +18,53 @@ const getStatusColor = (status: string) => {
   }
 };
 
-export function Activity() {
-  const [emails, setEmails] = useState<EmailDto[]>(mockEmails);
+interface ActivityProps {
+  workspace: Workspace;
+  emails: PaginatedList<EmailDto> | null;
+}
+
+export function Activity({ workspace, emails }: ActivityProps) {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState<string>('');
 
-  const filteredEmails = emails.filter(email => {
+  // Use real emails data from API
+  const emailsData = emails?.items || [];
+
+  const filteredEmails = emailsData.filter((email: EmailDto) => {
     const matchesStatus = statusFilter === 'all' || email.status === statusFilter;
     const matchesSearch = email.subject?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         email.toAddresses?.some(addr => addr.toLowerCase().includes(searchTerm.toLowerCase()));
+                         email.toAddresses?.some((addr: string) => addr.toLowerCase().includes(searchTerm.toLowerCase()));
     return matchesStatus && matchesSearch;
   });
+
+  // Loading state when emails are being fetched
+  if (!emails) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Activity</h1>
+            <p className="text-gray-600">Email activity for {workspace.name}</p>
+          </div>
+        </div>
+        
+        {/* Loading skeletons */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="animate-pulse bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <div className="h-4 bg-gray-300 rounded mb-2"></div>
+              <div className="h-8 bg-gray-300 rounded"></div>
+            </div>
+          ))}
+        </div>
+        
+        <div className="animate-pulse bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="h-6 bg-gray-300 rounded mb-4"></div>
+          <div className="h-64 bg-gray-300 rounded"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -97,7 +74,7 @@ export function Activity() {
           Activity
         </h1>
         <p className="text-gray-600" style={{ fontFamily: 'Nunito, sans-serif' }}>
-          Monitor your email sending activity and view detailed logs.
+          Monitor your email sending activity and view detailed logs for {workspace.name}.
         </p>
       </div>
 
@@ -111,7 +88,7 @@ export function Activity() {
             <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
           </div>
           <div className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-            {emails.length}
+            {emailsData.length}
           </div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
@@ -122,7 +99,7 @@ export function Activity() {
             <div className="w-2 h-2 bg-green-500 rounded-full"></div>
           </div>
           <div className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-            {emails.filter(e => e.status === EMAIL_STATUS.SENT).length}
+            {emailsData.filter((e: EmailDto) => e.status === EMAIL_STATUS.SENT).length}
           </div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
@@ -133,7 +110,7 @@ export function Activity() {
             <div className="w-2 h-2 bg-red-500 rounded-full"></div>
           </div>
           <div className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-            {emails.filter(e => e.status === EMAIL_STATUS.FAILED).length}
+            {emailsData.filter((e: EmailDto) => e.status === EMAIL_STATUS.FAILED).length}
           </div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
@@ -144,7 +121,7 @@ export function Activity() {
             <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
           </div>
           <div className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
-            {emails.filter(e => e.status === EMAIL_STATUS.QUEUED).length}
+            {emailsData.filter((e: EmailDto) => e.status === EMAIL_STATUS.QUEUED).length}
           </div>
         </div>
       </div>
@@ -218,7 +195,7 @@ export function Activity() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {filteredEmails.map((email) => (
+              {filteredEmails.map((email: EmailDto) => (
                 <tr key={email.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
