@@ -1,3 +1,4 @@
+import { HttpClient } from "@/lib/services";
 import type { Route } from "./+types/index";
 import { DashboardOverviewContainer } from "@/dashboard/dashboard-overview-container";
 
