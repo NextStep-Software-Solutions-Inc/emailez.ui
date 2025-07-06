@@ -29,9 +29,10 @@ const mockConfigurations: EmailConfiguration[] = [
 
 interface UseEmailConfigurationsProps {
   showNotification: (type: 'success' | 'error', message: string) => void;
+  onConfirmDelete?: (configId: string, configName: string) => Promise<boolean>;
 }
 
-export function useEmailConfigurations({ showNotification }: UseEmailConfigurationsProps) {
+export function useEmailConfigurations({ showNotification, onConfirmDelete }: UseEmailConfigurationsProps) {
   const [configurations, setConfigurations] = useState<EmailConfiguration[]>(mockConfigurations);
   const [isTestingConnection, setIsTestingConnection] = useState<string | null>(null);
   const [isSendingTestEmail, setIsSendingTestEmail] = useState<string | null>(null);
@@ -47,8 +48,12 @@ export function useEmailConfigurations({ showNotification }: UseEmailConfigurati
     );
   };
 
-  const deleteConfiguration = (configId: string) => {
-    if (window.confirm('Are you sure you want to delete this configuration?')) {
+  const deleteConfiguration = async (configId: string, configName: string) => {
+    const confirmed = onConfirmDelete 
+      ? await onConfirmDelete(configId, configName)
+      : window.confirm('Are you sure you want to delete this configuration?');
+    
+    if (confirmed) {
       setConfigurations(prev => prev.filter(c => c.emailConfigurationId !== configId));
       showNotification('success', 'Configuration deleted successfully');
     }

@@ -5,6 +5,7 @@ import { ConfigurationForm } from './ConfigurationForm';
 import { TestEmailModal } from './TestEmailModal';
 import type { Workspace } from '@/lib/types';
 import { Button } from '@/components/ui/button';
+import { ConfirmDialog } from '@/components/ui/responsive-dialog';
 
 interface ConfigurationsProps {
   workspace: Workspace;
@@ -19,6 +20,8 @@ export function Configurations({ workspace, configurations }: ConfigurationsProp
   const [testingConnection, setTestingConnection] = useState<string | null>(null);
   const [testResults, setTestResults] = useState<{ [key: string]: { success: boolean; message: string } }>({});
   const [isSendingTestEmail, setIsSendingTestEmail] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [configToDelete, setConfigToDelete] = useState<{ id: string; name: string } | null>(null);
 
   const handleAddConfiguration = () => {
     setEditingConfig(null);
@@ -31,15 +34,16 @@ export function Configurations({ workspace, configurations }: ConfigurationsProp
   };
 
   const handleDeleteConfiguration = (configId: string, configName: string) => {
-    // Show confirmation dialog
-    const confirmed = window.confirm(
-      `Are you sure you want to delete the configuration "${configName}"? This action cannot be undone.`
-    );
-    
-    if (confirmed) {
+    setConfigToDelete({ id: configId, name: configName });
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = () => {
+    if (configToDelete) {
       // In a real app, this would make an API call
-      console.log('Deleting configuration:', configId);
+      console.log('Deleting configuration:', configToDelete.id);
       // Here you would typically update the configurations state or refetch data
+      setConfigToDelete(null);
     }
   };
 
@@ -96,11 +100,6 @@ export function Configurations({ workspace, configurations }: ConfigurationsProp
     } finally {
       setIsSendingTestEmail(false);
     }
-  };
-
-  const handleCancelTest = () => {
-    setShowTestModal(false);
-    setTestingConfig(null);
   };
 
   const handleSaveConfiguration = (config: EmailConfiguration) => {
@@ -191,12 +190,27 @@ export function Configurations({ workspace, configurations }: ConfigurationsProp
 
       {showTestModal && testingConfig && (
         <TestEmailModal
+          open={showTestModal}
           config={testingConfig}
           onSend={handleSendTestEmail}
-          onCancel={handleCancelTest}
+          onOpenChange={(open) => {
+            if (!open) {
+              handleCloseTestModal()
+            }
+          }}
           isSending={isSendingTestEmail}
         />
       )}
+
+      <ConfirmDialog
+        open={showDeleteConfirm}
+        onOpenChange={setShowDeleteConfirm}
+        title="Delete Configuration"
+        description={`Are you sure you want to delete the configuration "${configToDelete?.name}"? This action cannot be undone.`}
+        onConfirm={confirmDelete}
+        confirmText="Delete"
+        variant="destructive"
+      />
     </div>
   );
 }
