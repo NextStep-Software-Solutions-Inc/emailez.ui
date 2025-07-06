@@ -2,10 +2,9 @@ import { useState } from 'react';
 import type { EmailConfiguration } from '@/types/configuration.types';
 import { ConfigurationCard } from './ConfigurationCard';
 import { ConfigurationForm } from './ConfigurationForm';
-import { TestEmailModal } from './TestEmailModal';
 import type { Workspace } from '@/lib/types';
 import { Button } from '@/components/ui/button';
-import { ConfirmDialog } from '@/components/ui/responsive-dialog';
+import { TestEmailDialog, ConfirmDialog } from '@/components/dialogs';
 
 interface ConfigurationsProps {
   workspace: Workspace;
@@ -189,11 +188,11 @@ export function Configurations({ workspace, configurations }: ConfigurationsProp
       )}
 
       {showTestModal && testingConfig && (
-        <TestEmailModal
+        <TestEmailDialog
           open={showTestModal}
           config={testingConfig}
           onSend={handleSendTestEmail}
-          onOpenChange={(open) => {
+          onOpenChange={(open: boolean) => {
             if (!open) {
               handleCloseTestModal()
             }

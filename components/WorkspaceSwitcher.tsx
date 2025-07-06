@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useWorkspace } from '@/lib/contexts/WorkspaceContext';
-import { cn } from '@/utils';
-import { CreateWorkspaceModal } from './CreateWorkspaceModal';
+import { cn } from '@/lib/utils';
+import { CreateWorkspaceDialog } from '@/components/dialogs';
 import { Button } from '@/components/ui/button';
 
 export function WorkspaceSwitcher() {
@@ -25,14 +25,14 @@ export function WorkspaceSwitcher() {
       <Button
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         variant="outline"
-        className="flex items-center space-x-2 px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors"
+        className="flex items-center space-x-2 px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors min-w-0 max-w-[280px]"
         disabled={isOperationLoading}
       >
         <div className={cn(
           "w-3 h-3 rounded-full",
           currentWorkspace.isActive ? "bg-green-500" : "bg-red-500"
         )}></div>
-        <span className="font-medium text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+        <span className="font-medium text-gray-900 truncate max-w-[120px] sm:max-w-[200px]" style={{ fontFamily: 'Nunito, sans-serif' }} title={currentWorkspace.name || undefined}>
           {currentWorkspace.name}
         </span>
         <svg 
@@ -49,7 +49,7 @@ export function WorkspaceSwitcher() {
       </Button>
 
       {isDropdownOpen && (
-        <div className="absolute top-full mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+        <div className="absolute top-full mt-2 w-80 max-w-[calc(100vw-2rem)] bg-white border border-gray-200 rounded-lg shadow-lg z-50">
           <div className="p-2">
             <div className="text-sm font-medium text-gray-700 px-3 py-2">
               Your Workspaces
@@ -69,9 +69,9 @@ export function WorkspaceSwitcher() {
                     "w-3 h-3 rounded-full",
                     workspace.isActive ? "bg-green-500" : "bg-red-500"
                   )}></div>
-                  <div className="flex-1">
-                    <div className="font-medium">{workspace.name}</div>
-                    <div className="text-sm text-gray-500">{workspace.domain}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium truncate" title={workspace.name || undefined}>{workspace.name}</div>
+                    <div className="text-sm text-gray-500 truncate" title={workspace.domain || undefined}>{workspace.domain}</div>
                   </div>
                   {currentWorkspace.workspaceId === workspace.workspaceId && (
                     <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
@@ -93,7 +93,7 @@ export function WorkspaceSwitcher() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <div className="font-medium">Create New Workspace</div>
                   <div className="text-sm text-gray-500">Start a new workspace</div>
                 </div>
@@ -111,8 +111,8 @@ export function WorkspaceSwitcher() {
         />
       )}
 
-      {/* Create Workspace Modal */}
-      <CreateWorkspaceModal
+      {/* Create Workspace Dialog */}
+      <CreateWorkspaceDialog
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
       />
