@@ -8,9 +8,13 @@ import type {
 
 // Workspace API calls
 export const workspaceApi = {
+  setAuthToken: (token: string | null) => {
+    httpClient.setTokenGetter(() => token);
+  },
+
   // GET /api/v1/user/workspaces
   getUserWorkspaces: async (): Promise<Workspace[]> => {
-    return httpClient.get<Workspace[]>('/api/v1/user/workspaces');
+    return httpClient.get<Workspace[]>('/api/v1/tenants',);
   },
 
   // POST /api/v1/workspaces
@@ -19,12 +23,12 @@ export const workspaceApi = {
   },
 
   // PUT /api/v1/workspaces/{workspaceId}
-  updateWorkspace: async (workspaceId: string, data: UpdateWorkspaceCommand): Promise<void> => {
+  updateWorkspace: async (workspaceId: string, data: UpdateWorkspaceCommand, token?: string): Promise<void> => {
     return httpClient.put<void>(`/api/v1/workspaces/${workspaceId}`, data);
   },
 
   // DELETE /api/v1/workspaces/{workspaceId}
-  deleteWorkspace: async (workspaceId: string): Promise<void> => {
+  deleteWorkspace: async (workspaceId: string, token?: string): Promise<void> => {
     return httpClient.delete<void>(`/api/v1/workspaces/${workspaceId}`);
   },
 };

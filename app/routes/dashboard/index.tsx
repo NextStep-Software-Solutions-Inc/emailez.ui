@@ -1,4 +1,4 @@
-import { HttpClient } from "@/lib/services";
+import { HttpClient, workspaceApi } from "@/lib/services";
 import type { Route } from "./+types/index";
 import { DashboardOverviewContainer } from "@/dashboard/dashboard-overview-container";
 
@@ -9,6 +9,14 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default function Dashboard() {
+export async function loader({ request }: Route.LoaderArgs) {
+  const token = HttpClient.getTokenFromRequest(request);
+  if (!token) {
+    throw new Response("Unauthorized", { status: 401 });
+  }
+
+  return {};
+}
+export default function Dashboard({loaderData}: Route.ComponentProps) {
   return <DashboardOverviewContainer />;
 }

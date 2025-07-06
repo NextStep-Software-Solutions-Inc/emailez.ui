@@ -12,6 +12,7 @@ interface FetchOptions extends RequestInit {
 class HttpClient {
   private baseUrl: string;
   private defaultHeaders: HeadersInit;
+  private tokenGetter: (() => string | null) | null = null;
 
   constructor(baseUrl: string = API_BASE_URL) {
     this.baseUrl = baseUrl;
@@ -20,8 +21,21 @@ class HttpClient {
     };
   }
 
+  // Set token getter function that will be called for each request
+  setTokenGetter(getter: (() => string | null) | null): void {
+    this.tokenGetter = getter;
+  }
+
+  // Get the current token using the getter
+  getToken(): string | null {
+    return this.tokenGetter ? this.tokenGetter() : null;
+  }
+
+
   private getAuthHeader(options: FetchOptions = {}): HeadersInit {
-    return options.token ? { 'Authorization': `Bearer ${options.token}` } : {};
+    // Priority: explicit token > token getter > no token
+    const token = options.token || this.getToken();
+    return token ? { 'Authorization': `Bearer ${token}` } : {};
   }
 
   private buildUrl(endpoint: string, params?: Record<string, string | number | boolean>): string {
@@ -150,7 +164,6 @@ class HttpClient {
         const sessionData = JSON.parse(decodedValue);
         return sessionData.token || sessionData.access_token || sessionData.jwt || null;
       }
-      
       return decodedValue;
     } catch (error) {
       console.warn('Failed to parse session cookie:', error);
