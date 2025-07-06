@@ -1,17 +1,23 @@
 import { useState } from 'react';
-import type { EmailConfiguration } from '@/types/configuration.types';
+import { useNavigate } from 'react-router';
+import type { EmailConfiguration, CreateEmailConfigurationCommand } from '@/types/configuration.types';
 import { ConfigurationCard } from './ConfigurationCard';
 import { ConfigurationForm } from './ConfigurationForm';
 import type { Workspace } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { TestEmailDialog, ConfirmDialog } from '@/components/dialogs';
+import { emailConfigApi } from '@/lib/services';
+import { useAuth } from '@clerk/react-router';
 
 interface ConfigurationsProps {
   workspace: Workspace;
   configurations: EmailConfiguration[];
 }
 
-export function Configurations({ workspace, configurations }: ConfigurationsProps) {
+export function Configurations({ workspace, configurations: initialConfigurations }: ConfigurationsProps) {
+  const { getToken } = useAuth();
+  const navigate = useNavigate();
+  const [configurations, setConfigurations] = useState<EmailConfiguration[]>(initialConfigurations);
   const [showForm, setShowForm] = useState(false);
   const [editingConfig, setEditingConfig] = useState<EmailConfiguration | null>(null);
   const [showTestModal, setShowTestModal] = useState(false);
@@ -21,6 +27,8 @@ export function Configurations({ workspace, configurations }: ConfigurationsProp
   const [isSendingTestEmail, setIsSendingTestEmail] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [configToDelete, setConfigToDelete] = useState<{ id: string; name: string } | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleAddConfiguration = () => {
     setEditingConfig(null);
@@ -37,12 +45,34 @@ export function Configurations({ workspace, configurations }: ConfigurationsProp
     setShowDeleteConfirm(true);
   };
 
-  const confirmDelete = () => {
-    if (configToDelete) {
-      // In a real app, this would make an API call
-      console.log('Deleting configuration:', configToDelete.id);
-      // Here you would typically update the configurations state or refetch data
+  const confirmDelete = async () => {
+    if (!configToDelete) return;
+    
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      // Get the auth token
+      const token = await getToken();
+      if (!token) {
+        throw new Error('No authentication token available');
+      }
+      
+      // Set the token for API calls
+      emailConfigApi.setAuthToken(token);
+      
+      // Delete the configuration
+      await emailConfigApi.deleteEmailConfiguration(workspace.workspaceId, configToDelete.id);
+      
+      // Remove from local state
+      setConfigurations(prev => prev.filter(config => config.emailConfigurationId !== configToDelete.id));
+      
       setConfigToDelete(null);
+      setShowDeleteConfirm(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to delete configuration');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -50,7 +80,17 @@ export function Configurations({ workspace, configurations }: ConfigurationsProp
     setTestingConnection(config.emailConfigurationId);
     
     try {
-      // Simulate API call for testing connection
+      // Get the auth token
+      const token = await getToken();
+      if (!token) {
+        throw new Error('No authentication token available');
+      }
+      
+      // Set the token for API calls
+      emailConfigApi.setAuthToken(token);
+      
+      // For now, simulate the test connection
+      // In the future, you might want to add a test connection endpoint
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       // Simulate random success/failure for demo
@@ -101,11 +141,67 @@ export function Configurations({ workspace, configurations }: ConfigurationsProp
     }
   };
 
-  const handleSaveConfiguration = (config: EmailConfiguration) => {
-    // In a real app, this would make an API call
-    console.log('Saving configuration:', config);
-    setShowForm(false);
-    setEditingConfig(null);
+  const handleSaveConfiguration = async (configData: CreateEmailConfigurationCommand) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      
+      // Get the auth token
+      const token = await getToken();
+      if (!token) {
+        throw new Error('No authentication token available');
+      }
+      
+      // Set the token for API calls
+      emailConfigApi.setAuthToken(token);
+      
+      if (editingConfig) {
+        // Update existing configuration
+        await emailConfigApi.updateEmailConfiguration(workspace.workspaceId, editingConfig.emailConfigurationId, {
+          id: editingConfig.emailConfigurationId,
+          workspaceId: workspace.workspaceId,
+          displayName: configData.displayName,
+          fromEmail: configData.fromEmail,
+          smtpHost: configData.smtpHost,
+          smtpPort: configData.smtpPort,
+          useSsl: configData.useSsl,
+          username: configData.username,
+          password: configData.password
+        });
+        
+        // Update local state
+        setConfigurations(prev => prev.map(config => 
+          config.emailConfigurationId === editingConfig.emailConfigurationId 
+            ? { ...config, ...configData }
+            : config
+        ));
+      } else {
+        // Create new configuration
+        const response = await emailConfigApi.createEmailConfiguration(workspace.workspaceId, configData);
+        
+        // Add to local state
+        const newConfig: EmailConfiguration = {
+          emailConfigurationId: response.emailConfigurationId,
+          displayName: configData.displayName,
+          fromEmail: configData.fromEmail,
+          smtpHost: configData.smtpHost,
+          smtpPort: configData.smtpPort,
+          useSsl: configData.useSsl,
+          username: configData.username,
+          workspaceId: workspace.workspaceId,
+          createdAtUtc: new Date().toISOString()
+        };
+        
+        setConfigurations(prev => [...prev, newConfig]);
+      }
+      
+      setShowForm(false);
+      setEditingConfig(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to save configuration');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleCancelForm = () => {
@@ -120,6 +216,31 @@ export function Configurations({ workspace, configurations }: ConfigurationsProp
 
   return (
     <div className="space-y-6">
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <span className="text-red-600">❌</span>
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-red-800">Error</h3>
+              <div className="mt-2 text-sm text-red-700">
+                <p>{error}</p>
+              </div>
+              <div className="mt-4">
+                <button
+                  type="button"
+                  className="bg-red-100 px-2 py-1 rounded-md text-sm font-medium text-red-800 hover:bg-red-200"
+                  onClick={() => setError(null)}
+                >
+                  Dismiss
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="min-w-0 flex-1">
           <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">Email Configurations</h1>
@@ -129,6 +250,7 @@ export function Configurations({ workspace, configurations }: ConfigurationsProp
           <Button
             onClick={handleAddConfiguration}
             className="w-full sm:w-auto inline-flex items-center justify-center"
+            disabled={isLoading}
           >
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -143,8 +265,18 @@ export function Configurations({ workspace, configurations }: ConfigurationsProp
           <h2 className="text-lg font-semibold text-gray-900 mb-4">
             {editingConfig ? 'Edit Configuration' : 'Add New Configuration'}
           </h2>
+          {isLoading && (
+            <div className="mb-4 flex items-center text-blue-600">
+              <svg className="animate-spin -ml-1 mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              {editingConfig ? 'Updating configuration...' : 'Creating configuration...'}
+            </div>
+          )}
           <ConfigurationForm
             config={editingConfig || undefined}
+            workspaceId={workspace.workspaceId}
             onSave={handleSaveConfiguration}
             onCancel={handleCancelForm}
           />
@@ -207,7 +339,7 @@ export function Configurations({ workspace, configurations }: ConfigurationsProp
         title="Delete Configuration"
         description={`Are you sure you want to delete the configuration "${configToDelete?.name}"? This action cannot be undone.`}
         onConfirm={confirmDelete}
-        confirmText="Delete"
+        confirmText={isLoading ? "Deleting..." : "Delete"}
         variant="destructive"
       />
     </div>

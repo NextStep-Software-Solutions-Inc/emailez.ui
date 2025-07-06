@@ -5,11 +5,12 @@ import { Button } from '@/components/ui/button';
 
 interface ConfigurationFormProps {
   config?: EmailConfiguration;
-  onSave: (config: EmailConfiguration) => void;
+  workspaceId: string;
+  onSave: (config: CreateEmailConfigurationCommand) => void;
   onCancel: () => void;
 }
 
-export function ConfigurationForm({ config, onSave, onCancel }: ConfigurationFormProps) {
+export function ConfigurationForm({ config, workspaceId, onSave, onCancel }: ConfigurationFormProps) {
   const [formData, setFormData] = useState<{
     smtpHost: string;
     smtpPort: number;
@@ -83,19 +84,18 @@ export function ConfigurationForm({ config, onSave, onCancel }: ConfigurationFor
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      const newConfig: EmailConfiguration = {
-        emailConfigurationId: config?.emailConfigurationId || `config-${Date.now()}`,
-        workspaceId: config?.workspaceId || 'workspace-1',
+      const configData: CreateEmailConfigurationCommand = {
+        workspaceId: workspaceId,
         smtpHost: formData.smtpHost,
         smtpPort: formData.smtpPort,
         useSsl: formData.useSsl,
         username: formData.username,
         fromEmail: formData.fromEmail,
         displayName: formData.displayName,
-        createdAtUtc: config?.createdAtUtc || new Date().toISOString()
+        password: formData.password
       };
       
-      onSave(newConfig);
+      onSave(configData);
     } catch (error) {
       console.error('Failed to save configuration:', error);
     } finally {

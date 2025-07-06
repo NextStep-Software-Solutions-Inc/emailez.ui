@@ -46,7 +46,7 @@ const navigationItems = [
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { currentWorkspace, workspaces, isLoading, hasCompletedOnboarding } = useWorkspace();
+  const { currentWorkspace, workspaces, isLoading, hasCompletedOnboarding, isSwitchingWorkspace } = useWorkspace();
   const location = useLocation();
 
   const isActive = (path: string) => {
@@ -234,6 +234,19 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             {children}
           </div>
         </main>
+
+        {/* Workspace switching loading overlay */}
+        {isSwitchingWorkspace && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-8 shadow-xl max-w-sm mx-4">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                <p className="text-gray-900 font-medium mb-2">Switching Workspace</p>
+                <p className="text-gray-600 text-sm">Please wait while we load your workspace...</p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

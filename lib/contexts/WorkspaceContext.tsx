@@ -12,6 +12,7 @@ interface WorkspaceContextType {
   workspaces: Workspace[];
   isLoading: boolean;
   isOperationLoading: boolean; // For create/update/switch operations
+  isSwitchingWorkspace: boolean; // New: Specific loading state for workspace switching
   error: string | null;
   hasCompletedOnboarding: boolean;
   // Workspace management
@@ -45,6 +46,7 @@ export function WorkspaceProvider({ children }: WorkspaceProviderProps) {
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isOperationLoading, setIsOperationLoading] = useState(false);
+  const [isSwitchingWorkspace, setIsSwitchingWorkspace] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
 
@@ -201,13 +203,16 @@ export function WorkspaceProvider({ children }: WorkspaceProviderProps) {
 
   const switchWorkspace = async (workspaceId: string): Promise<void> => {
     try {
-      setIsOperationLoading(true);
+      setIsSwitchingWorkspace(true); // Start switching animation
       setError(null);
       
       const targetWorkspace = workspaces.find(w => w.workspaceId === workspaceId);
       if (!targetWorkspace) {
         throw new Error('Workspace not found');
       }
+      
+      // Add a nice delay for the animation (1200ms for better UX)
+      await new Promise(resolve => setTimeout(resolve, 1200));
       
       // Navigate to the new workspace URL
       const currentPath = window.location.pathname;
@@ -232,7 +237,7 @@ export function WorkspaceProvider({ children }: WorkspaceProviderProps) {
       setError(err instanceof Error ? err.message : 'Failed to switch workspace');
       throw err;
     } finally {
-      setIsOperationLoading(false);
+      setIsSwitchingWorkspace(false); // End switching animation
     }
   };
 
@@ -262,6 +267,7 @@ export function WorkspaceProvider({ children }: WorkspaceProviderProps) {
         isLoading,
         error,
         isOperationLoading,
+        isSwitchingWorkspace,
         hasCompletedOnboarding,
         createWorkspace,
         updateWorkspace,
