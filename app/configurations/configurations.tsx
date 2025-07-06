@@ -3,14 +3,15 @@ import type { EmailConfiguration } from '@/types/configuration.types';
 import { ConfigurationCard } from './ConfigurationCard';
 import { ConfigurationForm } from './ConfigurationForm';
 import { TestEmailModal } from './TestEmailModal';
-import type { Tenant } from '@/lib/types';
+import type { Workspace } from '@/lib/types';
+import { Button } from '@/components/ui/button';
 
 interface ConfigurationsProps {
-  tenant: Tenant;
+  workspace: Workspace;
   configurations: EmailConfiguration[];
 }
 
-export function Configurations({ tenant, configurations }: ConfigurationsProps) {
+export function Configurations({ workspace, configurations }: ConfigurationsProps) {
   const [showForm, setShowForm] = useState(false);
   const [editingConfig, setEditingConfig] = useState<EmailConfiguration | null>(null);
   const [showTestModal, setShowTestModal] = useState(false);
@@ -124,18 +125,18 @@ export function Configurations({ tenant, configurations }: ConfigurationsProps) 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="min-w-0 flex-1">
           <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">Email Configurations</h1>
-          <p className="text-sm sm:text-base text-gray-600 mt-1">Manage SMTP configurations for {tenant.name}</p>
+          <p className="text-sm sm:text-base text-gray-600 mt-1">Manage SMTP configurations for {workspace.name}</p>
         </div>
         <div className="flex-shrink-0">
-          <button
+          <Button
             onClick={handleAddConfiguration}
-            className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="w-full sm:w-auto inline-flex items-center justify-center"
           >
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
             <span className="whitespace-nowrap">Add Configuration</span>
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -160,15 +161,15 @@ export function Configurations({ tenant, configurations }: ConfigurationsProps) 
           <h3 className="mt-2 text-sm font-medium text-gray-900">No configurations</h3>
           <p className="mt-1 text-sm text-gray-500">Get started by creating your first email configuration.</p>
           <div className="mt-6">
-            <button
+            <Button
               onClick={handleAddConfiguration}
-              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="inline-flex items-center"
             >
               <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
               </svg>
               Add Configuration
-            </button>
+            </Button>
           </div>
         </div>
       ) : (

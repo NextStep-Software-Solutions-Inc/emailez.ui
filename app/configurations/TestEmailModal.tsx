@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import type { EmailConfiguration, TestEmailData } from '@/lib/types/configuration.types';
 import { useModalAnimation } from '@/lib/hooks/useModalAnimation';
 import { DEFAULT_TEST_EMAIL } from '@/lib/constants/smtp.constants';
+import { Button } from '@/components/ui/button';
 
 interface TestEmailModalProps {
   config: EmailConfiguration;
@@ -88,15 +89,17 @@ export function TestEmailModal({ config, onSend, onCancel, isSending }: TestEmai
             <h3 className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
               Send Test Email
             </h3>
-            <button
+            <Button
               onClick={handleCancel}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              variant="ghost"
+              size="sm"
+              className="text-gray-400 hover:text-gray-600 transition-colors p-1"
               disabled={isSending}
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
-            </button>
+            </Button>
           </div>
           
           {showSuccess ? (
@@ -112,13 +115,13 @@ export function TestEmailModal({ config, onSend, onCancel, isSending }: TestEmai
               <p className="text-sm text-gray-600 mb-6" style={{ fontFamily: 'Nunito, sans-serif' }}>
                 The test email has been sent to {formData.recipient}
               </p>
-              <button
+              <Button
                 onClick={handleCancel}
-                className="w-full sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                className="w-full sm:w-auto"
                 style={{ fontFamily: 'Nunito, sans-serif' }}
               >
                 Close
-              </button>
+              </Button>
             </div>
           ) : (
             <>
@@ -199,10 +202,10 @@ export function TestEmailModal({ config, onSend, onCancel, isSending }: TestEmai
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3 pt-4">
-                  <button
+                  <Button
                     type="submit"
                     disabled={isSending}
-                    className="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 flex items-center justify-center space-x-2"
+                    className="w-full sm:w-auto flex items-center justify-center space-x-2"
                     style={{ fontFamily: 'Nunito, sans-serif' }}
                   >
                     {isSending ? (
@@ -221,16 +224,17 @@ export function TestEmailModal({ config, onSend, onCancel, isSending }: TestEmai
                         <span>Send Test Email</span>
                       </>
                     )}
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="button"
                     onClick={handleCancel}
                     disabled={isSending}
-                    className="w-full sm:w-auto px-4 py-2 text-gray-600 hover:text-gray-900 disabled:opacity-50 transition-colors text-center"
+                    variant="ghost"
+                    className="w-full sm:w-auto"
                     style={{ fontFamily: 'Nunito, sans-serif' }}
                   >
                     Cancel
-                  </button>
+                  </Button>
                 </div>
               </form>
             </>

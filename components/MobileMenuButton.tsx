@@ -1,4 +1,5 @@
 import { cn } from '@/utils';
+import { Button } from '@/components/ui/button';
 
 interface MobileMenuButtonProps {
   isOpen: boolean;
@@ -7,7 +8,9 @@ interface MobileMenuButtonProps {
 
 export default function MobileMenuButton({ isOpen, onClick }: MobileMenuButtonProps) {
   return (
-    <button 
+    <Button 
+      variant="ghost"
+      size="sm"
       className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200 relative w-10 h-10 flex items-center justify-center"
       onClick={onClick}
       aria-label="Toggle mobile menu"
@@ -37,6 +40,6 @@ export default function MobileMenuButton({ isOpen, onClick }: MobileMenuButtonPr
           )}
         />
       </div>
-    </button>
+    </Button>
   );
 }

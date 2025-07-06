@@ -3,6 +3,9 @@ import { SignedIn } from '@clerk/react-router';
 import { useState } from 'react';
 import { useLocation } from 'react-router';
 import { cn } from '@/utils';
+import { useWorkspace } from '@/lib/contexts/WorkspaceContext';
+import { WorkspaceOnboarding } from '@/onboarding/workspace-onboarding';
+import { WorkspaceSwitcher } from './WorkspaceSwitcher';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -43,6 +46,7 @@ const navigationItems = [
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { currentWorkspace, workspaces, isLoading, hasCompletedOnboarding } = useWorkspace();
   const location = useLocation();
 
   const isActive = (href: string) => {
@@ -52,6 +56,22 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     return location.pathname.startsWith(href);
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading your organization...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show onboarding if user hasn't completed it
+  if (!hasCompletedOnboarding || !currentWorkspace) {
+    return <WorkspaceOnboarding />;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Dashboard Header */}
@@ -60,7 +80,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="flex items-center justify-between h-16">
             {/* Left side - Mobile Menu Button and Logo */}
             <div className="flex items-center">
-              {/* Mobile menu button - animates width and opacity */}
+              {/* Mobile menu button */}
               <div className={cn(
                 "overflow-hidden transition-all duration-300 ease-in-out",
                 "lg:w-0 lg:opacity-0",
@@ -71,7 +91,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
                 >
                   <div className="w-6 h-6 relative">
-                    {/* Panel icon - shows when closed to indicate "open sidebar" */}
                     <svg 
                       className={cn(
                         "w-6 h-6 absolute inset-0 transition-opacity duration-300 ease-in-out",
@@ -85,7 +104,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                       <path d="M9 4v16" strokeWidth="2"/>
                     </svg>
                     
-                    {/* Arrow icon - shows when open to indicate "close sidebar" */}
                     <svg 
                       className={cn(
                         "w-6 h-6 absolute inset-0 transition-opacity duration-300 ease-in-out",
@@ -101,7 +119,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 </button>
               </div>
 
-              {/* Logo - moves smoothly with hamburger */}
+              {/* Logo */}
               <a href="/" className={cn(
                 "flex items-center space-x-3 transition-all duration-300 ease-in-out",
                 "lg:ml-0",
@@ -114,6 +132,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   Email EZ
                 </span>
               </a>
+            </div>
+
+            {/* Center - Workspace Switcher */}
+            <div className="hidden md:flex items-center">
+              <WorkspaceSwitcher />
             </div>
 
             {/* Right side - User Menu */}
@@ -136,6 +159,22 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}>
           <div className="flex flex-col h-full">
+            {/* Current Workspace Info (Mobile) */}
+            <div className="md:hidden p-4 border-b border-gray-200 bg-gray-50">
+              <div className="flex items-center space-x-3">
+                <div className={cn(
+                  "w-3 h-3 rounded-full",
+                  currentWorkspace.isActive ? "bg-green-500" : "bg-red-500"
+                )}></div>
+                <div className="flex-1">
+                  <div className="font-medium text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                    {currentWorkspace.name}
+                  </div>
+                  <div className="text-sm text-gray-500">{currentWorkspace.domain}</div>
+                </div>
+              </div>
+            </div>
+
             {/* Navigation */}
             <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
               {navigationItems.map((item) => (

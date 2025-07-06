@@ -5,7 +5,7 @@ import type { EmailConfiguration, TestConnectionResult, TestEmailData } from '@/
 const mockConfigurations: EmailConfiguration[] = [
   {
     emailConfigurationId: "config-1",
-    tenantId: "tenant-1",
+    workspaceId: "workspace-1",
     smtpHost: "smtp.gmail.com",
     smtpPort: 587,
     useSsl: true,
@@ -16,7 +16,7 @@ const mockConfigurations: EmailConfiguration[] = [
   },
   {
     emailConfigurationId: "config-2",
-    tenantId: "tenant-1",
+    workspaceId: "workspace-1",
     smtpHost: "smtp.sendgrid.net",
     smtpPort: 587,
     useSsl: true,

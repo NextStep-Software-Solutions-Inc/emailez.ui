@@ -6,7 +6,7 @@ import { EMAIL_STATUS } from '@/types/index';
 const mockEmails: EmailDto[] = [
   {
     id: "email-1",
-    tenantId: "tenant-1",
+    workspaceId: "workspace-1",
     fromAddress: "noreply@example.com",
     toAddresses: ["user1@example.com"],
     subject: "Welcome to our service",

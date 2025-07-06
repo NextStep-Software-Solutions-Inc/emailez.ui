@@ -1,11 +1,11 @@
 import type { MetaDescriptor } from "react-router";
-import type { Tenant } from "./tenant.types";
+import type { Workspace } from "./workspace.types";
 import type { EmailDto } from "./email.types";
 import type { EmailConfiguration } from "./configuration.types";
 
 // Dashboard Index Route Types
 export interface DashboardIndexLoaderData {
-  tenant: Tenant;
+  workspace: Workspace;
   recentEmails: EmailDto[];
   emailConfigurations: EmailConfiguration[];
 }

@@ -23,7 +23,7 @@ export default function Features() {
               🚀 Features Overview
             </h2>
             <p className="text-gray-600" style={{ fontFamily: 'Nunito, sans-serif' }}>
-              This is a temporary placeholder for the Features page. Here you can showcase all the powerful features of Email EZ including SMTP configurations, analytics, multi-tenant support, and more.
+              This is a temporary placeholder for the Features page. Here you can showcase all the powerful features of Email EZ including SMTP configurations, analytics, multi-workspace support, and more.
             </p>
           </div>
         </div>

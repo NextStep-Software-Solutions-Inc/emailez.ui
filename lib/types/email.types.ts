@@ -1,7 +1,8 @@
 // Email-related types
 export interface EmailDto {
   id: string;
-  tenantId: string;
+  workspaceId: string; // Updated to use workspaceId
+  tenantId?: string; // Keep for backward compatibility
   fromAddress: string;
   toAddresses: string[] | null;
   subject: string | null;
@@ -16,7 +17,8 @@ export interface EmailDto {
 
 export interface EmailDetailsDto {
   id: string;
-  tenantId: string;
+  workspaceId: string; // Updated to use workspaceId
+  tenantId?: string; // Keep for backward compatibility
   emailConfigurationId: string;
   fromAddress: string;
   toAddresses: string[] | null;
@@ -35,7 +37,8 @@ export interface EmailDetailsDto {
 }
 
 export interface SendEmailCommand {
-  tenantId: string;
+  workspaceId: string; // Updated to use workspaceId
+  tenantId?: string; // Keep for backward compatibility
   emailConfigurationId: string;
   toEmail: string[] | null;
   subject: string | null;

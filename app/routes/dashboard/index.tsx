@@ -1,28 +1,13 @@
 import type { Route } from "./+types/index";
-import { DashboardOverview } from "@/dashboard/dashboard-overview";
-import { getDashboardData } from "@/lib/data/dashboardData";
+import { DashboardOverviewContainer } from "@/dashboard/dashboard-overview-container";
 
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Dashboard - Email EZ" },
-    { name: "description", content: "Multi-tenant email service dashboard overview" },
+    { name: "description", content: "Multi-workspace email service dashboard overview" },
   ];
 }
 
-export async function loader({}: Route.LoaderArgs) {
-  // This would normally fetch from an API
-  const data = await getDashboardData();
-  return data;
-}
-
-export default function Dashboard({ loaderData }: Route.ComponentProps) {
-  const { tenant, recentEmails, emailConfigurations } = loaderData;
-  
-  return (
-    <DashboardOverview 
-      tenant={tenant}
-      recentEmails={recentEmails}
-      emailConfigurations={emailConfigurations}
-    />
-  );
+export default function Dashboard() {
+  return <DashboardOverviewContainer />;
 }

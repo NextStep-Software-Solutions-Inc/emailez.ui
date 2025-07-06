@@ -1,14 +1,23 @@
 import { useState } from 'react';
-import type { Tenant } from '@/types/tenant.types';
+import { useWorkspace } from '@/lib/contexts/WorkspaceContext';
+import type { CreateWorkspaceCommand } from '@/types/index';
+import { Button } from '@/components/ui/button';
 
-interface SettingsProps {
-  tenant: Tenant;
-}
+export function Settings() {
+  const { currentWorkspace, updateWorkspace, isLoading } = useWorkspace();
+  
+  if (!currentWorkspace) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-gray-600">No workspace found</p>
+      </div>
+    );
+  }
 
-export function Settings({ tenant }: SettingsProps) {
   const [activeTab, setActiveTab] = useState<'general' | 'notifications' | 'security' | 'billing'>('general');
   const [formData, setFormData] = useState({
-    tenantName: tenant.name || '',
+    name: currentWorkspace.name || '',
+    domain: currentWorkspace.domain || '',
     contactEmail: '', // This would come from user profile in a real app
     timezone: 'UTC',
     language: 'en',
@@ -20,10 +29,19 @@ export function Settings({ tenant }: SettingsProps) {
     apiRateLimit: 1000,
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Settings updated:', formData);
+    try {
+      const workspaceData: CreateWorkspaceCommand = {
+        name: formData.name,
+        domain: formData.domain,
+      };
+      await updateWorkspace(workspaceData);
+      alert('Workspace settings updated successfully!');
+    } catch (error) {
+      console.error('Failed to update settings:', error);
+      alert('Failed to update settings. Please try again.');
+    }
   };
 
   const handleInputChange = (field: string, value: string | boolean | number) => {
@@ -51,10 +69,11 @@ export function Settings({ tenant }: SettingsProps) {
       <div className="border-b border-gray-200">
         <nav className="flex space-x-8">
           {tabs.map((tab) => (
-            <button
+            <Button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              variant="ghost"
+              className={`py-2 px-1 border-b-2 font-medium text-sm h-auto rounded-none ${
                 activeTab === tab.id
                   ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -62,7 +81,7 @@ export function Settings({ tenant }: SettingsProps) {
             >
               <span className="mr-2">{tab.icon}</span>
               {tab.label}
-            </button>
+            </Button>
           ))}
         </nav>
       </div>
@@ -74,15 +93,29 @@ export function Settings({ tenant }: SettingsProps) {
             <h2 className="text-lg font-semibold text-gray-900 mb-4">General Settings</h2>
             <div className="space-y-4">
               <div>
-                <label htmlFor="tenantName" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                   Organization Name
                 </label>
                 <input
                   type="text"
-                  id="tenantName"
-                  value={formData.tenantName}
-                  onChange={(e) => handleInputChange('tenantName', e.target.value)}
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => handleInputChange('name', e.target.value)}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="domain" className="block text-sm font-medium text-gray-700">
+                  Domain
+                </label>
+                <input
+                  type="text"
+                  id="domain"
+                  value={formData.domain}
+                  onChange={(e) => handleInputChange('domain', e.target.value)}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="example.com"
                 />
               </div>
 
@@ -273,12 +306,12 @@ export function Settings({ tenant }: SettingsProps) {
               </div>
 
               <div className="pt-4 border-t border-gray-200">
-                <button
+                <Button
                   type="button"
-                  className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  variant="outline"
                 >
                   View Billing History
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -286,12 +319,12 @@ export function Settings({ tenant }: SettingsProps) {
 
         {/* Save Button */}
         <div className="flex justify-end">
-          <button
+          <Button
             type="submit"
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            disabled={isLoading}
           >
-            Save Changes
-          </button>
+            {isLoading ? 'Saving...' : 'Save Changes'}
+          </Button>
         </div>
       </form>
     </div>

@@ -2,6 +2,7 @@
 import { useElementHeight } from "@/hooks/useElementHeight";
 import { SignedIn, SignedOut, SignInButton } from '@clerk/react-router';
 import { Link } from 'react-router';
+import { Button } from '@/components/ui/button';
 
 function BrandName() {
   return (
@@ -22,16 +23,20 @@ function Hero() {
           Simple, Powerful Email Sending Service
         </h2>
         <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animation-delay-400" style={{ fontFamily: 'Nunito, sans-serif' }}>
-          Multi-tenant subscription service that lets you configure multiple email providers, 
+          Multi-workspace subscription service that lets you configure multiple email providers, 
           manage SMTP settings, and send emails effortlessly across all your projects.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animation-delay-600">
           <SignedOut>
-            <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <Button 
+              size="lg" 
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform" 
+              style={{ fontFamily: 'Nunito, sans-serif' }}
+            >
               <SignInButton mode="modal">
                 Get Started Free
               </SignInButton>
-            </button>
+            </Button>
             <Link 
               to="/pricing"
               className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-105 transform text-center block" 
@@ -71,8 +76,8 @@ function Features() {
     },
     {
       icon: "🏢",
-      title: "Multi-Tenant Architecture",
-      description: "Perfect for agencies and SaaS companies. Each tenant gets isolated email configurations and analytics."
+      title: "Multi-Workspace Architecture",
+      description: "Perfect for agencies and SaaS companies. Each workspace gets isolated email configurations and analytics."
     },
     {
       icon: "📊",
@@ -87,7 +92,7 @@ function Features() {
     {
       icon: "📈",
       title: "Analytics & Tracking",
-      description: "Detailed email delivery reports, bounce handling, and engagement metrics for each tenant."
+      description: "Detailed email delivery reports, bounce handling, and engagement metrics for each workspace."
     },
     {
       icon: "🚀",
@@ -133,8 +138,8 @@ function HowItWorks() {
   const steps = [
     {
       step: "1",
-      title: "Sign Up & Create Tenant",
-      description: "Create your account and set up your first tenant workspace for your organization."
+      title: "Sign Up & Create Workspace",
+      description: "Create your account and set up your first workspace for your organization."
     },
     {
       step: "2",
@@ -189,11 +194,15 @@ function CTA() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animation-delay-400">
           <SignedOut>
-            <button className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <Button 
+              size="lg" 
+              className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform" 
+              style={{ fontFamily: 'Nunito, sans-serif' }}
+            >
               <SignInButton mode="modal">
                 Start Free Trial
               </SignInButton>
-            </button>
+            </Button>
             <Link 
               to="/support"
               className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-105 transform text-center block" 

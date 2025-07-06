@@ -4,7 +4,7 @@ import type { EmailConfiguration } from "@/types/configuration.types";
 export const mockConfigurations: EmailConfiguration[] = [
   {
     emailConfigurationId: "config-1",
-    tenantId: "tenant-1",
+    workspaceId: "workspace-1",
     smtpHost: "smtp.gmail.com",
     smtpPort: 587,
     useSsl: true,
@@ -15,7 +15,7 @@ export const mockConfigurations: EmailConfiguration[] = [
   },
   {
     emailConfigurationId: "config-2",
-    tenantId: "tenant-1",
+    workspaceId: "workspace-1",
     smtpHost: "smtp.sendgrid.net",
     smtpPort: 587,
     useSsl: true,
@@ -26,7 +26,7 @@ export const mockConfigurations: EmailConfiguration[] = [
   },
   {
     emailConfigurationId: "config-3",
-    tenantId: "tenant-1",
+    workspaceId: "workspace-1",
     smtpHost: "smtp.mailgun.org",
     smtpPort: 587,
     useSsl: true,

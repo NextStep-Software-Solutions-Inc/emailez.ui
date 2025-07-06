@@ -1,6 +1,6 @@
-# Email EZ - Multi-Tenant Email Service
+# Email EZ - Multi-Workspace Email Service
 
-A modern, beautiful web application for Email EZ - a multi-tenant, subscription-based email sending service with configurable SMTP settings.
+A modern, beautiful web application for Email EZ - a multi-workspace, subscription-based email sending service with configurable SMTP settings.
 
 🚀 **Live Demo**: [https://emailez-aqp2xh5hm-nextstep-inc.vercel.app](https://emailez-aqp2xh5hm-nextstep-inc.vercel.app)
 
@@ -10,7 +10,7 @@ A modern, beautiful web application for Email EZ - a multi-tenant, subscription-
 - 📱 **Mobile-First Design** - Fully responsive with mobile navigation
 - ⚡ **Dynamic Header** - Auto-hiding header with smooth scroll behavior
 - 🎯 **Component Architecture** - Modular, reusable components
-- 🔧 **Multi-Tenant Support** - Built for agencies and SaaS companies
+- 🔧 **Multi-Workspace Support** - Built for agencies and SaaS companies
 - 📧 **SMTP Configuration** - Multiple email provider support
 - 💳 **Subscription Management** - Flexible pricing and billing
 - 🔒 **TypeScript** - Full type safety throughout
@@ -22,13 +22,13 @@ A modern, beautiful web application for Email EZ - a multi-tenant, subscription-
 Email EZ is a comprehensive email sending service designed for:
 
 - **Agencies** managing multiple clients
-- **SaaS companies** with multi-tenant needs
+- **SaaS companies** with multi-workspace needs
 - **Developers** requiring reliable email infrastructure
 - **Businesses** needing scalable email solutions
 
 ### Key Capabilities
 
-- Multiple SMTP configurations per tenant
+- Multiple SMTP configurations per workspace
 - Real-time email delivery tracking
 - Subscription-based billing
 - RESTful API with SDK support

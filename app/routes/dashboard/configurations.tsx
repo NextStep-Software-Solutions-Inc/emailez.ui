@@ -13,7 +13,7 @@ export async function loader({}: Route.LoaderArgs) {
   // This would normally fetch configurations from an API
   const data = await getDashboardData();
   return {
-    tenant: data.tenant,
+    workspace: data.workspace,
     configurations: data.emailConfigurations,
   };
 }
@@ -23,5 +23,5 @@ export default function ConfigurationsRoute({ loaderData }: Route.ComponentProps
     return <div>Loading...</div>;
   }
 
-  return <Configurations tenant={loaderData.tenant} configurations={loaderData.configurations} />;
+  return <Configurations workspace={loaderData.workspace} configurations={loaderData.configurations} />;
 }

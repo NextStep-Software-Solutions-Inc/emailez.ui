@@ -30,7 +30,7 @@ export function ComposeEmail({ configurations }: ComposeEmailProps) {
 
     try {
       const sendCommand: SendEmailCommand = {
-        tenantId: "temp-tenant-id", // This would come from context/auth
+        workspaceId: "workspace-1", // This would come from context/auth
         emailConfigurationId: selectedConfig,
         subject,
         toEmail: recipients.split(',').map(email => email.trim()),

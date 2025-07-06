@@ -1,6 +1,6 @@
 import { Analytics } from "@/analytics/analytics";
 import { getDashboardData } from "@/lib/data/dashboardData";
-import type { Route } from "./+types";
+import type { Route } from "./+types/analytics";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -12,13 +12,13 @@ export function meta({}: Route.MetaArgs) {
 export async function loader({}: Route.LoaderArgs) {
   // This would normally fetch analytics data from an API
   const data = await getDashboardData();
-  return { tenant: data.tenant };
+  return { workspace: data.workspace };
 }
 
 export default function AnalyticsRoute({ loaderData }: Route.ComponentProps) {
-  if (!loaderData) {
+  if (!loaderData.workspace) {
     return <div>Loading...</div>;
   }
   
-  return <Analytics tenant={loaderData.tenant} />;
+  return <Analytics workspace={loaderData.workspace} />;
 }

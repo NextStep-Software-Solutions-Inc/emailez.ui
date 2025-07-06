@@ -1,7 +1,8 @@
 // Email configuration types
 export interface EmailConfiguration {
   emailConfigurationId: string;
-  tenantId: string;
+  workspaceId: string; // Updated to use workspaceId
+  tenantId?: string; // Keep for backward compatibility
   smtpHost: string | null;
   smtpPort: number;
   useSsl: boolean;
@@ -12,7 +13,8 @@ export interface EmailConfiguration {
 }
 
 export interface CreateEmailConfigurationCommand {
-  tenantId: string;
+  workspaceId: string; // Updated to use workspaceId  
+  tenantId?: string; // Keep for backward compatibility
   smtpHost: string | null;
   smtpPort: number;
   useSsl: boolean;
@@ -30,7 +32,8 @@ export interface CreateEmailConfigurationResponse {
 
 export interface UpdateEmailConfigurationCommand {
   id: string;
-  tenantId: string;
+  workspaceId: string; // Updated to use workspaceId
+  tenantId?: string; // Keep for backward compatibility
   smtpHost: string | null;
   smtpPort: number;
   useSsl: boolean;

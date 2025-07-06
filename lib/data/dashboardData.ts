@@ -1,18 +1,28 @@
-import type { EmailConfiguration, EmailDto, Tenant } from "../types";
+import type { EmailConfiguration, EmailDto, Workspace } from "../types";
+
+// Mock workspaces data
+export const mockWorkspaces: Workspace[] = [
+  {
+    workspaceId: "workspace-1",
+    name: "Acme Corp",
+    domain: "acme.com",
+    isActive: true,
+    createdAtUtc: "2024-01-15T10:30:00Z",
+  },
+  {
+    workspaceId: "workspace-2", 
+    name: "Beta Solutions",
+    domain: "beta.com",
+    isActive: true,
+    createdAtUtc: "2024-02-01T09:15:00Z",
+  }
+];
 
 // Mock data - will be replaced with API calls later
-export const mockTenant: Tenant = {
-  tenantId: "123e4567-e89b-12d3-a456-426614174000",
-  name: "Acme Corporation",
-  domain: "acme.com",
-  isActive: true,
-  createdAtUtc: "2024-01-15T10:30:00Z"
-};
-
 export const mockRecentEmails: EmailDto[] = [
   {
     id: "email-1",
-    tenantId: mockTenant.tenantId,
+    workspaceId: "workspace-1",
     fromAddress: "noreply@acme.com",
     toAddresses: ["user@example.com"],
     subject: "Welcome to our service",
@@ -26,7 +36,7 @@ export const mockRecentEmails: EmailDto[] = [
   },
   {
     id: "email-2", 
-    tenantId: mockTenant.tenantId,
+    workspaceId: "workspace-1",
     fromAddress: "alerts@acme.com",
     toAddresses: ["admin@example.com"],
     subject: "System maintenance notification",
@@ -40,7 +50,7 @@ export const mockRecentEmails: EmailDto[] = [
   },
   {
     id: "email-3",
-    tenantId: mockTenant.tenantId,
+    workspaceId: "workspace-1",
     fromAddress: "support@acme.com", 
     toAddresses: ["customer@example.com"],
     subject: "Your support ticket has been resolved",
@@ -51,13 +61,28 @@ export const mockRecentEmails: EmailDto[] = [
     attemptCount: 3,
     bodySnippet: "Hi there! Your support ticket #12345 has been...",
     isHtml: true
+  },
+  // Mock emails for second workspace
+  {
+    id: "email-4",
+    workspaceId: "workspace-2",
+    fromAddress: "hello@beta.com",
+    toAddresses: ["client@example.com"],
+    subject: "Project update",
+    status: "Sent",
+    errorMessage: null,
+    queuedAt: "2024-12-20T16:00:00Z",
+    sentAt: "2024-12-20T16:00:10Z",
+    attemptCount: 1,
+    bodySnippet: "Here's the latest update on your project...",
+    isHtml: true
   }
 ];
 
 export const mockEmailConfigurations: EmailConfiguration[] = [
   {
     emailConfigurationId: "config-1",
-    tenantId: mockTenant.tenantId,
+    workspaceId: "workspace-1",
     smtpHost: "smtp.gmail.com",
     smtpPort: 587,
     useSsl: true,
@@ -65,15 +90,57 @@ export const mockEmailConfigurations: EmailConfiguration[] = [
     fromEmail: "noreply@acme.com",
     displayName: "Acme Notifications",
     createdAtUtc: "2024-01-15T10:35:00Z"
+  },
+  {
+    emailConfigurationId: "config-2",
+    workspaceId: "workspace-1",
+    smtpHost: "smtp.gmail.com",
+    smtpPort: 587,
+    useSsl: true,
+    username: "alerts@acme.com",
+    fromEmail: "alerts@acme.com",
+    displayName: "Acme Alerts",
+    createdAtUtc: "2024-01-20T11:00:00Z"
+  },
+  {
+    emailConfigurationId: "config-3",
+    workspaceId: "workspace-2",
+    smtpHost: "smtp.sendgrid.net",
+    smtpPort: 587,
+    useSsl: true,
+    username: "apikey",
+    fromEmail: "hello@beta.com",
+    displayName: "Beta Solutions",
+    createdAtUtc: "2024-02-01T09:20:00Z"
   }
 ];
 
 // Service functions that would later be replaced with API calls
-export const getDashboardData = async () => {
+export const getDashboardData = async (workspaceId?: string) => {
   // Simulate API call
+  const filteredEmails = workspaceId 
+    ? mockRecentEmails.filter(email => email.workspaceId === workspaceId)
+    : mockRecentEmails;
+  
+  const filteredConfigurations = workspaceId
+    ? mockEmailConfigurations.filter(config => config.workspaceId === workspaceId)
+    : mockEmailConfigurations;
+
+  const workspace = workspaceId 
+    ? mockWorkspaces.find(w => w.workspaceId === workspaceId)
+    : mockWorkspaces[0]; // Default to first workspace if no ID provided
+
   return {
-    tenant: mockTenant,
-    recentEmails: mockRecentEmails,
-    emailConfigurations: mockEmailConfigurations
+    workspace,
+    recentEmails: filteredEmails,
+    emailConfigurations: filteredConfigurations
   };
+};
+
+export const getWorkspaceEmails = async (workspaceId: string) => {
+  return mockRecentEmails.filter(email => email.workspaceId === workspaceId);
+};
+
+export const getWorkspaceConfigurations = async (workspaceId: string) => {
+  return mockEmailConfigurations.filter(config => config.workspaceId === workspaceId);
 };

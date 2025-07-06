@@ -1,14 +1,25 @@
 import { useUser } from '@clerk/react-router';
-import type { Tenant, EmailDto, EmailConfiguration } from '@/types/index';
+import { useWorkspace } from '@/lib/contexts/WorkspaceContext';
+import type { EmailDto, EmailConfiguration } from '@/types/index';
+import { Button } from '@/components/ui/button';
+
 
 interface DashboardOverviewProps {
-  tenant: Tenant;
   recentEmails: EmailDto[];
   emailConfigurations: EmailConfiguration[];
 }
 
-export function DashboardOverview({ tenant, recentEmails, emailConfigurations }: DashboardOverviewProps) {
+export function DashboardOverview({ recentEmails, emailConfigurations }: DashboardOverviewProps) {
   const { user } = useUser();
+  const { currentWorkspace } = useWorkspace();
+
+  if (!currentWorkspace) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-gray-600">No workspace found</p>
+      </div>
+    );
+  }
 
   // Calculate basic stats from email data
   const totalEmails = recentEmails.length;
@@ -26,19 +37,19 @@ export function DashboardOverview({ tenant, recentEmails, emailConfigurations }:
           <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate" style={{ fontFamily: 'Nunito, sans-serif' }}>
             Dashboard Overview
           </h1>
-          <p className="text-sm sm:text-base text-gray-600 mt-1">Welcome back, {user?.firstName || 'User'}! Here's your {tenant.name} overview.</p>
+          <p className="text-sm sm:text-base text-gray-600 mt-1">Welcome back, {user?.firstName || 'User'}! Here's your {currentWorkspace.name} overview.</p>
         </div>
         <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 flex-shrink-0">
           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-            tenant.isActive 
+            currentWorkspace.isActive 
               ? 'bg-green-100 text-green-800' 
               : 'bg-red-100 text-red-800'
           }`}>
-            {tenant.isActive ? 'Active' : 'Inactive'}
+            {currentWorkspace.isActive ? 'Active' : 'Inactive'}
           </span>
-          <button className="w-full sm:w-auto bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium text-center">
+          <Button className="w-full sm:w-auto">
             Send Email
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -163,9 +174,12 @@ export function DashboardOverview({ tenant, recentEmails, emailConfigurations }:
                       Error: {email.errorMessage}
                     </span>
                   )}
-                  <button className="text-blue-600 hover:text-blue-800 text-sm font-medium whitespace-nowrap">
+                  <Button 
+                    variant="link" 
+                    className="text-blue-600 hover:text-blue-800 text-sm font-medium whitespace-nowrap p-0 h-auto"
+                  >
                     View Details
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>

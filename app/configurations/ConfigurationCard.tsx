@@ -1,4 +1,5 @@
 import type { EmailConfiguration, TestConnectionResult } from '@/types/configuration.types';
+import { Button } from '@/components/ui/button';
 
 interface ConfigurationCardProps {
   config: EmailConfiguration;
@@ -75,19 +76,23 @@ export function ConfigurationCard({
         
         {/* Action buttons - responsive layout */}
         <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-          <button
+          <Button
             onClick={onTestConnection}
             disabled={isTestingConnection}
-            className={`px-1.5 sm:px-3 py-1.5 text-xs rounded-lg transition-colors flex items-center gap-1 whitespace-nowrap ${getConnectionButtonStyle()} ${
+            variant="outline"
+            size="sm"
+            className={`px-1.5 sm:px-3 py-1.5 text-xs whitespace-nowrap ${getConnectionButtonStyle()} ${
               isTestingConnection ? 'opacity-50 cursor-not-allowed' : ''
             }`}
             style={{ fontFamily: 'Nunito, sans-serif' }}
           >
             {getConnectionButtonContent()}
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={onSendTestEmail}
-            className="px-1.5 sm:px-3 py-1.5 text-xs bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 transition-colors flex items-center gap-1 whitespace-nowrap"
+            variant="outline"
+            size="sm"
+            className="px-1.5 sm:px-3 py-1.5 text-xs bg-purple-50 text-purple-600 border-purple-200 hover:bg-purple-100 transition-colors flex items-center gap-1 whitespace-nowrap"
             style={{ fontFamily: 'Nunito, sans-serif' }}
           >
             <svg className="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -95,21 +100,25 @@ export function ConfigurationCard({
             </svg>
             <span className="hidden sm:inline">Send Test</span>
             <span className="sm:hidden">Test</span>
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={onEdit}
-            className="px-1.5 sm:px-3 py-1.5 text-xs bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors whitespace-nowrap"
+            variant="outline"
+            size="sm"
+            className="px-1.5 sm:px-3 py-1.5 text-xs bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100 transition-colors whitespace-nowrap"
             style={{ fontFamily: 'Nunito, sans-serif' }}
           >
             Edit
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={onDelete}
-            className="px-1.5 sm:px-3 py-1.5 text-xs bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors whitespace-nowrap"
+            variant="outline"
+            size="sm"
+            className="px-1.5 sm:px-3 py-1.5 text-xs bg-red-50 text-red-600 border-red-200 hover:bg-red-100 transition-colors whitespace-nowrap"
             style={{ fontFamily: 'Nunito, sans-serif' }}
           >
             Delete
-          </button>
+          </Button>
         </div>
       </div>
       

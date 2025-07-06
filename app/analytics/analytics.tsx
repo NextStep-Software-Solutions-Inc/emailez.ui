@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Line, LineChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import type { Tenant } from '@/types/tenant.types';
+import type { Workspace } from '@/types/workspace.types';
 
 interface AnalyticsProps {
-  tenant: Tenant;
+  workspace: Workspace;
 }
 
-export function Analytics({ tenant }: AnalyticsProps) {
+export function Analytics({ workspace }: AnalyticsProps) {
   const [selectedTimeRange, setSelectedTimeRange] = useState<'7d' | '30d' | '90d'>('30d');
 
   // Mock analytics data - in a real app, this would come from props/loader
@@ -79,7 +79,7 @@ export function Analytics({ tenant }: AnalyticsProps) {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Analytics</h1>
-          <p className="text-gray-600">Email performance metrics for {tenant.name}</p>
+          <p className="text-gray-600">Email performance metrics for {workspace.name}</p>
         </div>
         <div className="flex items-center space-x-2">
           <label htmlFor="timeRange" className="text-sm font-medium text-gray-700">

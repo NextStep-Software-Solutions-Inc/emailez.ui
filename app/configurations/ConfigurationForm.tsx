@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { EmailConfiguration, CreateEmailConfigurationCommand } from '@/types/configuration.types';
 import { SMTP_PRESETS } from '@/constants/smtp.constants';
+import { Button } from '@/components/ui/button';
 
 interface ConfigurationFormProps {
   config?: EmailConfiguration;
@@ -84,7 +85,7 @@ export function ConfigurationForm({ config, onSave, onCancel }: ConfigurationFor
       
       const newConfig: EmailConfiguration = {
         emailConfigurationId: config?.emailConfigurationId || `config-${Date.now()}`,
-        tenantId: config?.tenantId || 'tenant-1',
+        workspaceId: config?.workspaceId || 'workspace-1',
         smtpHost: formData.smtpHost,
         smtpPort: formData.smtpPort,
         useSsl: formData.useSsl,
@@ -271,22 +272,21 @@ export function ConfigurationForm({ config, onSave, onCancel }: ConfigurationFor
         </div>
 
         <div className="flex items-center space-x-3 pt-4">
-          <button
+          <Button
             type="submit"
             disabled={isLoading}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
             style={{ fontFamily: 'Nunito, sans-serif' }}
           >
             {isLoading ? 'Saving...' : config ? 'Update Configuration' : 'Add Configuration'}
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
+            variant="ghost"
             style={{ fontFamily: 'Nunito, sans-serif' }}
           >
             Cancel
-          </button>
+          </Button>
         </div>
       </form>
     </div>

@@ -1,13 +1,13 @@
 import { useUser } from '@clerk/react-router';
-import type { Tenant, EmailDto, EmailConfiguration } from '@/types/index';
+import type { Workspace, EmailDto, EmailConfiguration } from '@/types/index';
 
 interface DashboardOverviewProps {
-  tenant: Tenant;
+  workspace: Workspace;
   recentEmails: EmailDto[];
   emailConfigurations: EmailConfiguration[];
 }
 
-export function DashboardOverview({ tenant, recentEmails, emailConfigurations }: DashboardOverviewProps) {
+export function DashboardOverview({ workspace, recentEmails, emailConfigurations }: DashboardOverviewProps) {
   const { user } = useUser();
 
   // Calculate basic stats from email data
@@ -26,15 +26,15 @@ export function DashboardOverview({ tenant, recentEmails, emailConfigurations }:
           <h1 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
             Dashboard Overview
           </h1>
-          <p className="text-gray-600 mt-1">Welcome back, {user?.firstName || 'User'}! Here's your {tenant.name} overview.</p>
+          <p className="text-gray-600 mt-1">Welcome back, {user?.firstName || 'User'}! Here's your {workspace.name} overview.</p>
         </div>
         <div className="flex items-center space-x-3">
           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-            tenant.isActive 
+            workspace.isActive 
               ? 'bg-green-100 text-green-800' 
               : 'bg-red-100 text-red-800'
           }`}>
-            {tenant.isActive ? 'Active' : 'Inactive'}
+            {workspace.isActive ? 'Active' : 'Inactive'}
           </span>
           <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium">
             Send Email

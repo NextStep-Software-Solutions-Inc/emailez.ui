@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { EmailConfiguration, SendEmailCommand } from '@/types/index';
+import { Button } from '@/components/ui/button';
 
 interface ComposeEmailProps {
   configurations: EmailConfiguration[];
@@ -30,7 +31,7 @@ export function ComposeEmail({ configurations }: ComposeEmailProps) {
 
     try {
       const sendCommand: SendEmailCommand = {
-        tenantId: "temp-tenant-id", // This would come from context/auth
+        workspaceId: "workspace-1", // This would come from context/auth
         emailConfigurationId: selectedConfig,
         subject,
         toEmail: recipients.split(',').map(email => email.trim()),
@@ -238,8 +239,9 @@ export function ComposeEmail({ configurations }: ComposeEmailProps) {
         {/* Form Actions */}
         <div className="px-6 py-4 bg-gray-50 rounded-b-lg border-t border-gray-200">
           <div className="flex items-center justify-between">
-            <button
+            <Button
               type="button"
+              variant="outline"
               onClick={() => {
                 setSubject('');
                 setRecipients('');
@@ -248,15 +250,14 @@ export function ComposeEmail({ configurations }: ComposeEmailProps) {
                 setSendStatus('idle');
                 setErrorMessage(null);
               }}
-              className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
               Clear
-            </button>
+            </Button>
             
-            <button
+            <Button
               type="submit"
               disabled={isSending || !selectedConfig || !subject || !recipients || !body}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-300 disabled:cursor-not-allowed flex items-center space-x-2"
+              className="flex items-center space-x-2"
             >
               {isSending ? (
                 <>
@@ -269,7 +270,7 @@ export function ComposeEmail({ configurations }: ComposeEmailProps) {
                   <span className="text-lg">📧</span>
                 </>
               )}
-            </button>
+            </Button>
           </div>
         </div>
       </form>
@@ -280,8 +281,9 @@ export function ComposeEmail({ configurations }: ComposeEmailProps) {
           Quick Templates
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <button
+          <Button
             type="button"
+            variant="outline"
             onClick={() => {
               setSubject('Welcome to our service!');
               setBody(isHtml 
@@ -289,14 +291,17 @@ export function ComposeEmail({ configurations }: ComposeEmailProps) {
                 : 'Welcome!\n\nThank you for signing up for our service. We\'re excited to have you on board!\n\nBest regards,\nThe Team'
               );
             }}
-            className="text-left p-4 border border-gray-200 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="text-left p-4 h-auto justify-start"
           >
-            <h3 className="font-medium text-gray-900">Welcome Email</h3>
-            <p className="text-sm text-gray-600 mt-1">Standard welcome message for new users</p>
-          </button>
+            <div>
+              <h3 className="font-medium text-gray-900">Welcome Email</h3>
+              <p className="text-sm text-gray-600 mt-1">Standard welcome message for new users</p>
+            </div>
+          </Button>
           
-          <button
+          <Button
             type="button"
+            variant="outline"
             onClick={() => {
               setSubject('Password Reset Request');
               setBody(isHtml 
@@ -304,14 +309,17 @@ export function ComposeEmail({ configurations }: ComposeEmailProps) {
                 : 'Password Reset\n\nWe received a request to reset your password. Click the link below to reset it:\n\n[Reset Password Link]\n\nIf you didn\'t request this, please ignore this email.'
               );
             }}
-            className="text-left p-4 border border-gray-200 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="text-left p-4 h-auto justify-start"
           >
-            <h3 className="font-medium text-gray-900">Password Reset</h3>
-            <p className="text-sm text-gray-600 mt-1">Password reset confirmation email</p>
-          </button>
+            <div>
+              <h3 className="font-medium text-gray-900">Password Reset</h3>
+              <p className="text-sm text-gray-600 mt-1">Password reset confirmation email</p>
+            </div>
+          </Button>
           
-          <button
+          <Button
             type="button"
+            variant="outline"
             onClick={() => {
               setSubject('Account Verification Required');
               setBody(isHtml 
@@ -319,14 +327,17 @@ export function ComposeEmail({ configurations }: ComposeEmailProps) {
                 : 'Verify Your Account\n\nPlease verify your email address by clicking the link below:\n\n[Verification Link]\n\nThis link will expire in 24 hours.'
               );
             }}
-            className="text-left p-4 border border-gray-200 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="text-left p-4 h-auto justify-start"
           >
-            <h3 className="font-medium text-gray-900">Email Verification</h3>
-            <p className="text-sm text-gray-600 mt-1">Email address verification request</p>
-          </button>
+            <div>
+              <h3 className="font-medium text-gray-900">Email Verification</h3>
+              <p className="text-sm text-gray-600 mt-1">Email address verification request</p>
+            </div>
+          </Button>
           
-          <button
+          <Button
             type="button"
+            variant="outline"
             onClick={() => {
               setSubject('Monthly Newsletter');
               setBody(isHtml 
@@ -334,11 +345,13 @@ export function ComposeEmail({ configurations }: ComposeEmailProps) {
                 : 'Monthly Update\n\nWhat\'s New This Month\n\nHere are the latest updates and features:\n\n- New feature 1\n- New feature 2\n- Bug fixes and improvements\n\nThank you for being a valued customer!'
               );
             }}
-            className="text-left p-4 border border-gray-200 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="text-left p-4 h-auto justify-start"
           >
-            <h3 className="font-medium text-gray-900">Newsletter</h3>
-            <p className="text-sm text-gray-600 mt-1">Monthly newsletter template</p>
-          </button>
+            <div>
+              <h3 className="font-medium text-gray-900">Newsletter</h3>
+              <p className="text-sm text-gray-600 mt-1">Monthly newsletter template</p>
+            </div>
+          </Button>
         </div>
       </div>
     </div>

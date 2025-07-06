@@ -1,4 +1,5 @@
 import BrandLogo from "./BrandLogo";
+import { Button } from '@/components/ui/button';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -91,7 +92,7 @@ export default function Footer() {
             </div>
             <p className="text-gray-300 text-sm leading-relaxed mb-6" style={{ fontFamily: 'Nunito, sans-serif' }}>
               Simplifying email infrastructure for developers and agencies worldwide. 
-              Multi-tenant, secure, and scalable email sending service.
+              Multi-workspace, secure, and scalable email sending service.
             </p>
             <div className="flex space-x-4">
               {socialLinks.map((social) => (
@@ -148,9 +149,12 @@ export default function Footer() {
                 className="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 style={{ fontFamily: 'Nunito, sans-serif' }}
               />
-              <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 hover:scale-105 transform" style={{ fontFamily: 'Nunito, sans-serif' }}>
+              <Button 
+                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 hover:scale-105 transform" 
+                style={{ fontFamily: 'Nunito, sans-serif' }}
+              >
                 Subscribe
-              </button>
+              </Button>
             </div>
           </div>
         </div>
