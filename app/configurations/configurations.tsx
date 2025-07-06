@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
-import type { EmailConfiguration, CreateEmailConfigurationCommand } from '@/types/configuration.types';
+import type { EmailConfiguration, CreateEmailConfigurationCommand, TestEmailData } from '@/types/configuration.types';
 import { ConfigurationCard } from './ConfigurationCard';
 import { ConfigurationForm } from './ConfigurationForm';
 import type { Workspace } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { TestEmailDialog, ConfirmDialog } from '@/components/dialogs';
-import { emailConfigApi } from '@/lib/services';
+import { emailConfigApi, emailApi } from '@/lib/services';
 import { useAuth } from '@clerk/react-router';
 
 interface ConfigurationsProps {
@@ -16,7 +15,6 @@ interface ConfigurationsProps {
 
 export function Configurations({ workspace, configurations: initialConfigurations }: ConfigurationsProps) {
   const { getToken } = useAuth();
-  const navigate = useNavigate();
   const [configurations, setConfigurations] = useState<EmailConfiguration[]>(initialConfigurations);
   const [showForm, setShowForm] = useState(false);
   const [editingConfig, setEditingConfig] = useState<EmailConfiguration | null>(null);
@@ -122,20 +120,41 @@ export function Configurations({ workspace, configurations: initialConfiguration
     setShowTestModal(true);
   };
 
-  const handleSendTestEmail = async (testEmailData: any) => {
+  const handleSendTestEmail = async (testEmailData: TestEmailData) => {
+    if (!testingConfig) return;
+    
     setIsSendingTestEmail(true);
     
     try {
-      // Simulate API call for sending test email
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Get the auth token
+      const token = await getToken();
+      if (!token) {
+        throw new Error('No authentication token available');
+      }
+      
+      // Set the token for API calls
+      emailApi.setAuthToken(token);
+      
+      // Send test email using the existing email/send-email endpoint
+      await emailApi.sendEmail(workspace.workspaceId, {
+        workspaceId: workspace.workspaceId,
+        emailConfigurationId: testingConfig.emailConfigurationId,
+        toEmail: [testEmailData.recipient], // toEmail expects an array
+        subject: testEmailData.subject,
+        body: testEmailData.message,
+        isHtml: false, // Send as plain text for test emails
+        fromDisplayName: testingConfig.displayName,
+        ccEmail: null,
+        bccEmail: null,
+      });
       
       console.log('Test email sent successfully:', testEmailData);
       
-      // The modal will handle closing itself and showing success message
-      
     } catch (error) {
       console.error('Failed to send test email:', error);
-      alert('Failed to send test email. Please try again.');
+      // Show error message to user
+      const errorMessage = error instanceof Error ? error.message : 'Failed to send test email. Please check your configuration and try again.';
+      alert(errorMessage);
     } finally {
       setIsSendingTestEmail(false);
     }

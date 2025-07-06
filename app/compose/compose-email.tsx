@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import type { EmailConfiguration, SendEmailCommand } from '@/types/index';
 import { Button } from '@/components/ui/button';
+import { emailApi } from '@/lib/services/email-api';
+import { useWorkspace } from '@/lib/contexts/WorkspaceContext';
 
 interface ComposeEmailProps {
   configurations: EmailConfiguration[];
 }
 
 export function ComposeEmail({ configurations }: ComposeEmailProps) {
+  const { currentWorkspace } = useWorkspace();
   const [selectedConfig, setSelectedConfig] = useState<string>('');
   const [subject, setSubject] = useState('');
   const [recipients, setRecipients] = useState('');
@@ -25,16 +28,24 @@ export function ComposeEmail({ configurations }: ComposeEmailProps) {
       return;
     }
 
+    if (!currentWorkspace) {
+      setErrorMessage('No workspace selected');
+      setSendStatus('error');
+      return;
+    }
+
     setIsSending(true);
     setSendStatus('idle');
     setErrorMessage(null);
 
     try {
+      const selectedConfiguration = configurations.find(c => c.emailConfigurationId === selectedConfig);
+      
       const sendCommand: SendEmailCommand = {
-        workspaceId: "workspace-1", // This would come from context/auth
+        workspaceId: currentWorkspace.workspaceId,
         emailConfigurationId: selectedConfig,
         subject,
-        toEmail: recipients.split(',').map(email => email.trim()),
+        toEmail: recipients.split(',').map(email => email.trim()).filter(email => email.length > 0),
         body,
         isHtml,
         fromDisplayName: selectedConfiguration?.displayName || null,
@@ -42,26 +53,19 @@ export function ComposeEmail({ configurations }: ComposeEmailProps) {
         bccEmail: null
       };
 
-      // Mock API call - replace with actual implementation
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await emailApi.sendEmail(currentWorkspace.workspaceId, sendCommand);
       
-      // Simulate random success/failure for demo
-      const success = Math.random() > 0.3;
+      setSendStatus('success');
+      // Reset form
+      setSubject('');
+      setRecipients('');
+      setBody('');
+      setSelectedConfig('');
       
-      if (success) {
-        setSendStatus('success');
-        // Reset form
-        setSubject('');
-        setRecipients('');
-        setBody('');
-        setSelectedConfig('');
-      } else {
-        setSendStatus('error');
-        setErrorMessage('Failed to send email: SMTP connection timeout');
-      }
     } catch (error) {
+      console.error('Error sending email:', error);
       setSendStatus('error');
-      setErrorMessage('An unexpected error occurred while sending the email');
+      setErrorMessage(error instanceof Error ? error.message : 'Failed to send email. Please try again.');
     } finally {
       setIsSending(false);
     }
