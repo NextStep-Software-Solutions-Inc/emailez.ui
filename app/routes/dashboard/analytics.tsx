@@ -1,8 +1,9 @@
 import { Analytics } from "@/analytics/analytics";
 import { HttpClient, workspaceApi } from "@/lib/services";
 import type { Route } from "./+types/analytics";
+import { useLocation, useNavigate } from "react-router";
 
-export function meta({ params }: Route.MetaArgs) {
+export function meta({ }: Route.MetaArgs) {
   return [
     { title: "Analytics - Email EZ" },
     { name: "description", content: "Email analytics and performance metrics" },
@@ -25,19 +26,11 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     workspaceApi.setAuthToken(token);
     
     // Fetch workspace data
-    const userWorkspaces = await workspaceApi.getUserWorkspaces();
-    const currentWorkspace = userWorkspaces.find(w => w.workspaceId === workspaceId);
-    
-    if (!currentWorkspace) {
-      throw new Response("Workspace not found", { status: 404 });
-    }
-
-    // TODO: Replace with real analytics API when available
-    // For now, return null to indicate no analytics data
-    const analytics = null;
+    const url = new URL(request.url);
+    const daysBack = url.searchParams.get("days") || "30";
+    const analytics = await workspaceApi.getWorkspaceAnalytics(workspaceId, { daysBack });
 
     return {
-      workspace: currentWorkspace,
       analytics,
     };
 
@@ -47,7 +40,6 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     }
     console.error('Analytics loader error:', error);
     return {
-      workspace: null,
       analytics: null,
       error: error instanceof Error ? error.message : 'Failed to load analytics data'
     };
@@ -55,6 +47,8 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 }
 
 export default function AnalyticsRoute({ loaderData }: Route.ComponentProps) {
+   const navigate = useNavigate();
+  const location = useLocation();
   if ('error' in loaderData && loaderData.error) {
     return (
       <div className="text-center py-12">
@@ -63,9 +57,16 @@ export default function AnalyticsRoute({ loaderData }: Route.ComponentProps) {
     );
   }
 
-  if (!loaderData.workspace) {
+  if (!loaderData.analytics) {
     return <div>Loading...</div>;
   }
   
-  return <Analytics workspace={loaderData.workspace} analytics={loaderData.analytics} />;
+   const daysBack = (days: number) => {
+    const params = new URLSearchParams(location.search);
+    params.set("days", String(days));
+    navigate(`${location.pathname}?${params.toString()}`, { replace: false });
+    // This will re-run the loader with the new ?days= param
+  };
+
+  return <Analytics analytics={loaderData.analytics} daysBack={daysBack} />;
 }

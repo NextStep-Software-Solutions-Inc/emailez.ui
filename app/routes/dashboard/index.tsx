@@ -95,8 +95,6 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 }
 
 export default function Dashboard({ loaderData }: Route.ComponentProps) {
-  console.log('Dashboard component received loader data:', loaderData);
-  
   if ('error' in loaderData && loaderData.error) {
     return (
       <div className="text-center py-12">

@@ -232,8 +232,6 @@ export function WorkspaceProvider({ children }: WorkspaceProviderProps) {
       // This ensures all route loaders are executed with the new workspace ID
       // and prevents back/forward navigation to previous workspaces
       window.location.replace(newPath);
-      
-      console.log("Workspace switched to:", targetWorkspace);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to switch workspace');
       throw err;

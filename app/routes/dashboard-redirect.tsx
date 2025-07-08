@@ -22,7 +22,6 @@ export async function loader({ request }: Route.LoaderArgs) {
     // For now, always redirect to the first workspace
     // The workspace context will handle remembering the user's preference on the client side
     const targetWorkspace = workspaces[0];
-    console.log({ workspaces, targetWorkspace });
 
     // Redirect to workspace-specific dashboard
     throw redirect(`/workspace/${targetWorkspace.workspaceId}`);

@@ -1,9 +1,10 @@
-import { httpClient } from './http-client';
+import { httpClient, type FetchOptions } from './http-client';
 import type { 
   Workspace,
   CreateWorkspaceCommand,
   CreateWorkspaceResponse,
-  UpdateWorkspaceCommand
+  UpdateWorkspaceCommand,
+  GetWorkspaceAnalyticsResponse
 } from '@/types/workspace.types';
 
 // Workspace API calls
@@ -23,12 +24,17 @@ export const workspaceApi = {
   },
 
   // PUT /api/v1/workspaces/{workspaceId}
-  updateWorkspace: async (workspaceId: string, data: UpdateWorkspaceCommand, token?: string): Promise<void> => {
+  updateWorkspace: async (workspaceId: string, data: UpdateWorkspaceCommand): Promise<void> => {
     return httpClient.put<void>(`/api/v1/workspaces/${workspaceId}`, data);
   },
 
   // DELETE /api/v1/workspaces/{workspaceId}
-  deleteWorkspace: async (workspaceId: string, token?: string): Promise<void> => {
+  deleteWorkspace: async (workspaceId: String): Promise<void> => {
     return httpClient.delete<void>(`/api/v1/workspaces/${workspaceId}`);
   },
+
+  // GET /api/v1/workspaces/{workspaceId}/analytics
+  getWorkspaceAnalytics: async (workspaceId: string, params?: FetchOptions["params"]): Promise<GetWorkspaceAnalyticsResponse> => {
+    return httpClient.get<GetWorkspaceAnalyticsResponse>(`/api/v1/workspaces/${workspaceId}/analytics`, { params });
+  }
 };

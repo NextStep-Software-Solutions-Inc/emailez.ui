@@ -57,3 +57,47 @@ export interface UpdateTenantCommand {
   domain: string | null;
   isActive: boolean;
 }
+
+export interface GetWorkspaceAnalyticsResponse {
+  workspaceId: string,
+  workspaceName: string,
+  emailMetrics: {
+    totalEmails: number,
+    sentEmails: number,
+    failedEmails: number,
+    queuedEmails: number,
+    successRate: number,
+    averageAttempts: number,
+    statusBreakdown: {
+      Queued: number,
+      Failed: number,
+      Sent: number
+    }
+  },
+  engagementMetrics: {
+    openRate: number,
+    clickRate: number,
+    bounceRate: number,
+    unsubscribeRate: number,
+    spamComplaintRate: number
+  },
+  userMetrics: {
+    totalUsers: number,
+    owners: number,
+    admins: number,
+    members: number
+  },
+  analysisPeriodStart: string,
+  analysisPeriodEnd: string,
+  emailVolumeOverTime: {
+      date: string,
+      sent: number,
+      failed: number
+    }[],
+  recentPerformance: {
+      label: string,
+      sent: number,
+      failed: number,
+      deliveryRate: number
+    }[]
+}

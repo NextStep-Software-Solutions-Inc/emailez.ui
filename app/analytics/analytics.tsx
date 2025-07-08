@@ -1,40 +1,37 @@
-import { useState } from 'react';
-import { Line, LineChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
+import { use, useEffect, useMemo, useState } from 'react';
+import { Line, LineChart, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import type { Workspace } from '@/types/workspace.types';
-import type { DetailedAnalytics } from '@/lib/services/analytics-api';
+import type { GetWorkspaceAnalyticsResponse } from '@/types/workspace.types';
 
 interface AnalyticsProps {
-  workspace: Workspace;
-  analytics: DetailedAnalytics | null;
+  analytics: GetWorkspaceAnalyticsResponse;
+  daysBack: (days: number) => void;
 }
 
-export function Analytics({ workspace, analytics }: AnalyticsProps) {
+export function Analytics({ analytics: data, daysBack }: AnalyticsProps) {
   const [selectedTimeRange, setSelectedTimeRange] = useState<'7d' | '30d' | '90d'>('30d');
 
   // Show demo data message when no real analytics API is available
-  const showDemoData = !analytics;
-  
-  // Use real analytics data or fallback to demo data for development
-  const analyticsData = analytics || {
-    totalEmails: 1247,
-    sentEmails: 1205,
-    failedEmails: 42,
-    queuedEmails: 0,
-    deliveryRate: 96.6,
-    successRate: 96.6,
-    openRate: 24.3,
-    clickRate: 3.2,
-    bounceRate: 2.1,
-    unsubscribeRate: 0.8,
-    trend: []
-  };
+  const showDemoData = !data;
 
+  const analytics = useMemo(() => {
+    return {
+      ...data,
+      engagementMetrics: {
+        openRate: data.engagementMetrics?.openRate || 0,
+        clickRate: data.engagementMetrics?.clickRate || 0,
+        bounceRate: data.engagementMetrics?.bounceRate || 0,
+        unsubscribeRate: data.engagementMetrics?.unsubscribeRate || 0,
+      }
+    }
+  }, [data]);
+
+  
   // Use real chart data from analytics trend or fallback to demo data
   const getChartData = () => {
-    if (analytics?.trend && analytics.trend.length > 0) {
+    if (analytics.emailVolumeOverTime && analytics.emailVolumeOverTime.length > 0) {
       // Use real trend data from the API
-      return analytics.trend.map(item => ({
+      return analytics.emailVolumeOverTime.map(item => ({
         date: new Date(item.date).toLocaleDateString('en-US', { 
           month: 'short', 
           day: 'numeric' 
@@ -90,17 +87,23 @@ export function Analytics({ workspace, analytics }: AnalyticsProps) {
   };
 
   const timeRangeOptions = [
+    { value: '1d', label: 'Today' },
     { value: '7d', label: 'Last 7 days' },
     { value: '30d', label: 'Last 30 days' },
     { value: '90d', label: 'Last 90 days' },
   ];
+
+  useEffect(() => {
+    // Reset to 30d when component mounts
+    daysBack(Number(selectedTimeRange.slice(0, -1))) // Convert '7d' to 7, etc.;
+  }, [selectedTimeRange]);
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Analytics</h1>
-          <p className="text-gray-600">Email performance metrics for {workspace.name}</p>
+          <p className="text-gray-600">Email performance metrics for {analytics.workspaceName}</p>
         </div>
         <div className="flex items-center space-x-2">
           <label htmlFor="timeRange" className="text-sm font-medium text-gray-700">
@@ -145,7 +148,7 @@ export function Analytics({ workspace, analytics }: AnalyticsProps) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Total Emails</p>
-              <p className="text-2xl font-bold text-gray-900">{analyticsData.totalEmails.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-gray-900">{analytics.emailMetrics.totalEmails.toLocaleString()}</p>
             </div>
             <div className="p-3 bg-blue-100 rounded-full">
               <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -159,7 +162,7 @@ export function Analytics({ workspace, analytics }: AnalyticsProps) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Sent Successfully</p>
-              <p className="text-2xl font-bold text-green-600">{analyticsData.sentEmails.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-green-600">{analytics.emailMetrics.sentEmails.toLocaleString()}</p>
             </div>
             <div className="p-3 bg-green-100 rounded-full">
               <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -173,7 +176,7 @@ export function Analytics({ workspace, analytics }: AnalyticsProps) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Failed</p>
-              <p className="text-2xl font-bold text-red-600">{analyticsData.failedEmails.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-red-600">{analytics.emailMetrics.failedEmails.toLocaleString()}</p>
             </div>
             <div className="p-3 bg-red-100 rounded-full">
               <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -187,7 +190,7 @@ export function Analytics({ workspace, analytics }: AnalyticsProps) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600">Queued</p>
-              <p className="text-2xl font-bold text-yellow-600">{analyticsData.queuedEmails.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-yellow-600">{analytics.emailMetrics.queuedEmails.toLocaleString()}</p>
             </div>
             <div className="p-3 bg-yellow-100 rounded-full">
               <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -203,9 +206,9 @@ export function Analytics({ workspace, analytics }: AnalyticsProps) {
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-lg font-semibold text-gray-900">Delivery Rate</h3>
-            <p className="text-3xl font-bold text-gray-900 mt-2">{analyticsData.deliveryRate.toFixed(1)}%</p>
+            <p className="text-3xl font-bold text-gray-900 mt-2">{analytics.emailMetrics.successRate.toFixed(1)}%</p>
             <p className="text-sm text-gray-600 mt-1">
-              Success Rate: {analyticsData.successRate.toFixed(1)}%
+              Success Rate: {analytics.emailMetrics.successRate.toFixed(1)}%
             </p>
           </div>
           <div className="p-4 bg-purple-100 rounded-full">
@@ -222,25 +225,25 @@ export function Analytics({ workspace, analytics }: AnalyticsProps) {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="text-center">
             <p className="text-2xl font-bold text-blue-600">
-              {analyticsData.openRate ? `${analyticsData.openRate}%` : 'N/A'}
+              {analytics.engagementMetrics.openRate ? `${analytics.engagementMetrics.openRate}%` : 'N/A'}
             </p>
             <p className="text-sm text-gray-600">Open Rate</p>
           </div>
           <div className="text-center">
             <p className="text-2xl font-bold text-green-600">
-              {analyticsData.clickRate ? `${analyticsData.clickRate}%` : 'N/A'}
+              {analytics.engagementMetrics.clickRate ? `${analytics.engagementMetrics.clickRate}%` : 'N/A'}
             </p>
             <p className="text-sm text-gray-600">Click Rate</p>
           </div>
           <div className="text-center">
             <p className="text-2xl font-bold text-yellow-600">
-              {analyticsData.bounceRate ? `${analyticsData.bounceRate}%` : 'N/A'}
+              {analytics.engagementMetrics.bounceRate ? `${analytics.engagementMetrics.bounceRate}%` : 'N/A'}
             </p>
             <p className="text-sm text-gray-600">Bounce Rate</p>
           </div>
           <div className="text-center">
             <p className="text-2xl font-bold text-red-600">
-              {analyticsData.unsubscribeRate ? `${analyticsData.unsubscribeRate}%` : 'N/A'}
+              {analytics.engagementMetrics.unsubscribeRate ? `${analytics.engagementMetrics.unsubscribeRate}%` : 'N/A'}
             </p>
             <p className="text-sm text-gray-600">Unsubscribe Rate</p>
           </div>
@@ -316,18 +319,13 @@ export function Analytics({ workspace, analytics }: AnalyticsProps) {
       <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Performance</h2>
         <div className="space-y-3">
-          {analyticsData.trend && analyticsData.trend.length > 0 ? (
-            analyticsData.trend.slice(-3).reverse().map((item, index) => {
-              const date = new Date(item.date);
+          {analytics.recentPerformance && analytics.recentPerformance.length > 0 ? (
+            analytics.recentPerformance.slice(-3).map((item, index) => {
               const deliveryRate = item.sent > 0 ? ((item.sent / (item.sent + item.failed)) * 100).toFixed(1) : '0.0';
-              const dateLabel = index === 0 ? 'Recent' : 
-                               index === 1 ? 'Previous' : 
-                               date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-              
               return (
-                <div key={item.date} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                   <div>
-                    <p className="font-medium text-gray-900">{dateLabel}</p>
+                    <p className="font-medium text-gray-900">{item.label}</p>
                     <p className="text-sm text-gray-600">{item.sent} emails sent</p>
                   </div>
                   <div className="text-right">
