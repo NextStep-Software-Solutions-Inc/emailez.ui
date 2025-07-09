@@ -57,7 +57,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
       // Get recent emails for the workspace
       emailApi.getEmailsForWorkspace(currentWorkspace.workspaceId, { 
         pageNumber: 1, 
-        pageSize: 10 
+        pageSize: 1000 
       }),
       // Get email configurations for the workspace
       emailConfigApi.getAllEmailConfigurations(currentWorkspace.workspaceId)

@@ -30,7 +30,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
       workspaceApi.getUserWorkspaces(),
       emailApi.getEmailsForWorkspace(workspaceId, { 
         pageNumber: 1, 
-        pageSize: 50, 
+        pageSize: 1000, 
         sortOrder: 'desc' 
       })
     ]);
