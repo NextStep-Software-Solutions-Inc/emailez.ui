@@ -5,6 +5,7 @@ import { apiKeyApi } from '@/lib/services/api-key-api';
 import { ApiKeyDialog } from './ApiKeyDialog';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 
 export function ApiKeysTab({ workspaceId, userId }: { workspaceId: string; userId: string }) {
   const [apiKeys, setApiKeys] = useState<WorkspaceApiKey[]>([]);
@@ -54,13 +55,11 @@ export function ApiKeysTab({ workspaceId, userId }: { workspaceId: string; userI
       {plainKey && (
         <ApiKeyDialog plainKey={plainKey} open={showDialog} onOpenChange={setShowDialog} />
       )}
-      <div className="flex gap-2 mb-4">
-        <input
-          type="text"
+      <div className="flex gap-2 mb-4 max-w-md">
+        <Input
           placeholder="API Key Name"
           value={newApiKeyName}
           onChange={e => setNewApiKeyName(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
         />
         <Button type="button" onClick={handleCreateApiKey} disabled={apiKeyLoading || !newApiKeyName}>
           {apiKeyLoading ? 'Creating...' : 'Create API Key'}
