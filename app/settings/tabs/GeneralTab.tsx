@@ -1,13 +1,14 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
-
 export function GeneralTab({ formData, handleInputChange }: {
   formData: any;
   handleInputChange: (field: string, value: string | boolean | number) => void;
-}) {
+})
+{
+
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
       <h2 className="text-lg font-semibold text-gray-900 mb-4">General Settings</h2>
+    
       <div className="space-y-4">
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700">

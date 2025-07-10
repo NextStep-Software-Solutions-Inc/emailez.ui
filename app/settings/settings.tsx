@@ -1,23 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useWorkspace } from '@/lib/contexts/WorkspaceContext';
 import { useAuth } from '@clerk/react-router';
 import type { CreateWorkspaceCommand } from '@/types/index';
 import { Button } from '@/components/ui/button';
-import { apiKeyApi } from '@/lib/services/api-key-api';
-import { memberApi } from '@/lib/services/member-api';
-import type { WorkspaceApiKey, CreateWorkspaceApiKeyResponse } from '@/lib/types/api-key.types';
-import type { WorkspaceMember } from '@/lib/types/member.types';
 import { GeneralTab } from './tabs/GeneralTab';
 import { NotificationsTab } from './tabs/NotificationsTab';
 import { SecurityTab } from './tabs/SecurityTab';
 import { BillingTab } from './tabs/BillingTab';
 import { ApiKeysTab } from './tabs/ApiKeysTab';
 import { MembersTab } from './tabs/MembersTab';
+import { toast } from 'sonner';
+import { Copy } from 'lucide-react';
 
 export function Settings() {
   const { currentWorkspace, updateWorkspace, isLoading } = useWorkspace();
   const { userId } = useAuth();
-  
+ 
   if (!currentWorkspace) {
     return (
       <div className="text-center py-12">
@@ -44,26 +42,27 @@ export function Settings() {
   // Restore tabs variable
   const tabs = [
     { id: 'general', label: 'General', icon: '⚙️' },
-    { id: 'notifications', label: 'Notifications', icon: '🔔' },
-    { id: 'security', label: 'Security', icon: '🔒' },
-    { id: 'billing', label: 'Billing', icon: '💳' },
+    // { id: 'notifications', label: 'Notifications', icon: '🔔' },
+    // { id: 'security', label: 'Security', icon: '🔒' },
+    // { id: 'billing', label: 'Billing', icon: '💳' },
     { id: 'apiKeys', label: 'API Keys', icon: '🔑' },
     { id: 'members', label: 'Members', icon: '👥' },
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const workspaceData: CreateWorkspaceCommand = {
-        name: formData.name,
-        domain: formData.domain,
-      };
-      await updateWorkspace(workspaceData);
-      alert('Workspace settings updated successfully!');
-    } catch (error) {
-      console.error('Failed to update settings:', error);
-      alert('Failed to update settings. Please try again.');
-    }
+    const workspaceData: CreateWorkspaceCommand = {
+      name: formData.name,
+      domain: formData.domain,
+    };
+    toast.promise(
+      updateWorkspace(workspaceData),
+      {
+        loading: 'Saving settings...',
+        success: 'Settings updated successfully!',
+        error: 'Failed to update settings. Please try again.',
+      }
+    );
   };
 
   const handleInputChange = (field: string, value: string | boolean | number) => {
@@ -100,11 +99,48 @@ export function Settings() {
           ))}
         </nav>
       </div>
-
+      <div className="mb-6 w-full">
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-3 p-4 rounded-lg border border-gray-200 bg-gradient-to-r from-green-50 to-green-100 shadow-sm">
+          <div className="flex-1">
+            <div className="text-xs font-semibold text-gray-500 mb-1">Your User ID</div>
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-sm bg-gray-100 px-3 py-1 rounded border border-gray-300 text-gray-700 select-all">
+                {userId}
+              </span>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="hover:bg-green-200 transition"
+                onClick={() => {
+                  navigator.clipboard.writeText(userId as string);
+                  toast.success('User ID copied!');
+                }}
+                aria-label="Copy User ID"
+              >
+                <Copy/>
+              </Button>
+            </div>
+          </div>
+          <div className="text-xs text-gray-400 mt-1 md:mt-0">
+            Use this ID for support or API access.
+          </div>
+        </div>
+      </div>
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* General Settings */}
         {activeTab === 'general' && (
           <GeneralTab formData={formData} handleInputChange={handleInputChange} />
+        )}
+
+        {/* Notification Settings */}
+        {activeTab === 'notifications' && (
+          <NotificationsTab formData={formData} handleInputChange={handleInputChange} />
+        )}
+
+        {/* Security Settings */}
+        {activeTab === 'security' && (
+          <SecurityTab formData={formData} handleInputChange={handleInputChange} />
         )}
 
         {/* Save Button */}
@@ -120,15 +156,7 @@ export function Settings() {
         </div>
         }
       </form>
-       {/* Notification Settings */}
-        {activeTab === 'notifications' && (
-          <NotificationsTab formData={formData} handleInputChange={handleInputChange} />
-        )}
-
-        {/* Security Settings */}
-        {activeTab === 'security' && (
-          <SecurityTab formData={formData} handleInputChange={handleInputChange} />
-        )}
+       
 
         {/* Billing Settings */}
         {activeTab === 'billing' && (
