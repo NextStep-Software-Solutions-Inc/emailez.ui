@@ -1,32 +1,27 @@
-// API Key management service for workspace users
 import { httpClient } from './http-client';
+import type { WorkspaceApiKey, CreateWorkspaceApiKeyResponse } from '@/lib/types/api-key.types';
 
 export const apiKeyApi = {
-
-    setAuthToken: (token: string | null) => {
+    setAuthToken: (token: string | null): void => {
         httpClient.setTokenGetter(() => token);
     },
+
     // List all API keys for a workspace user
-    getApiKeys: async (workspaceId: string, userId: string) => {
-        return httpClient.get(`/api/v1/workspaces/${workspaceId}/users/${userId}/apikeys`);
+    getApiKeys: async (workspaceId: string, userId: string): Promise<WorkspaceApiKey[]> => {
+        return httpClient.get<WorkspaceApiKey[]>(`/api/v1/workspaces/${workspaceId}/users/${userId}/apikeys`);
     },
 
     // Create a new API key for a workspace user
-    createApiKey: async (workspaceId: string, userId: string, name?: string) => {
-        return httpClient.post(`/api/v1/workspaces/${workspaceId}/users/${userId}/apikeys`, {
+    createApiKey: async (workspaceId: string, userId: string, name?: string): Promise<CreateWorkspaceApiKeyResponse> => {
+        return httpClient.post<CreateWorkspaceApiKeyResponse>(`/api/v1/workspaces/${workspaceId}/users/${userId}/apikeys`, {
             workspaceId,
             userId,
             name,
         });
     },
 
-    // Regenerate an API key (returns new plain key)
-    regenerateApiKey: async (workspaceId: string, userId: string, apiKeyId: string) => {
-        return httpClient.post(`/api/v1/workspaces/${workspaceId}/users/${userId}/apikeys/${apiKeyId}/regenerate`);
-    },
-
     // Revoke (delete) an API key
-    revokeApiKey: async (workspaceId: string, userId: string, apiKeyId: string) => {
-        return httpClient.delete(`/api/v1/workspaces/${workspaceId}/users/${userId}/apikeys/${apiKeyId}`);
+    revokeApiKey: async (workspaceId: string, userId: string, apiKeyId: string): Promise<void> => {
+        return httpClient.delete<void>(`/api/v1/workspaces/${workspaceId}/users/${userId}/apikeys/${apiKeyId}`);
     },
 };
