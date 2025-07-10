@@ -107,7 +107,20 @@ export function Settings() {
           <GeneralTab formData={formData} handleInputChange={handleInputChange} />
         )}
 
-        {/* Notification Settings */}
+        {/* Save Button */}
+        {
+          ["general", "notifications", "security"].includes(activeTab) &&
+          <div className="flex justify-end">
+          <Button
+            type="submit"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Saving...' : 'Save Changes'}
+          </Button>
+        </div>
+        }
+      </form>
+       {/* Notification Settings */}
         {activeTab === 'notifications' && (
           <NotificationsTab formData={formData} handleInputChange={handleInputChange} />
         )}
@@ -131,20 +144,6 @@ export function Settings() {
         {activeTab === 'members' && (
           <MembersTab workspaceId={currentWorkspace.workspaceId} />
         )}
-
-        {/* Save Button */}
-        {
-          ["general", "notifications", "security"].includes(activeTab) &&
-          <div className="flex justify-end">
-          <Button
-            type="submit"
-            disabled={isLoading}
-          >
-            {isLoading ? 'Saving...' : 'Save Changes'}
-          </Button>
-        </div>
-        }
-      </form>
     </div>
   );
 }
