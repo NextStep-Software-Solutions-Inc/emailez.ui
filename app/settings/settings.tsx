@@ -133,7 +133,9 @@ export function Settings() {
         )}
 
         {/* Save Button */}
-        <div className="flex justify-end">
+        {
+          ["general", "notifications", "security"].includes(activeTab) &&
+          <div className="flex justify-end">
           <Button
             type="submit"
             disabled={isLoading}
@@ -141,6 +143,7 @@ export function Settings() {
             {isLoading ? 'Saving...' : 'Save Changes'}
           </Button>
         </div>
+        }
       </form>
     </div>
   );

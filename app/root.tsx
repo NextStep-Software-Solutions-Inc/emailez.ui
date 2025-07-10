@@ -16,6 +16,7 @@ import { rootAuthLoader } from '@clerk/react-router/ssr.server'
 import "./app.css";
 import { ClerkProvider } from '@clerk/react-router'
 import type { Route } from "./+types/root";
+import { Toaster } from "@/components/ui/sonner";
 
 export async function loader(args: Route.LoaderArgs) {
   return rootAuthLoader(args)
@@ -59,6 +60,7 @@ export default function App({ loaderData}: Route.ComponentProps) {
       signUpFallbackRedirectUrl="/"
       signInFallbackRedirectUrl="/"
     >
+      <Toaster richColors />
       <Outlet />
     </ClerkProvider>
   )

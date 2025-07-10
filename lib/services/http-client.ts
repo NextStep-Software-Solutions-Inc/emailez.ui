@@ -67,7 +67,7 @@ class HttpClient {
     try {
       // Get auth headers if token is provided
       const authHeaders = this.getAuthHeader(options);
-      
+
       const response = await fetch(url, {
         method,
         signal: controller.signal,
@@ -78,11 +78,31 @@ class HttpClient {
         },
         ...fetchOptions,
       });
-     
+
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+        try {
+          const errorBody = await response.json();
+          // Try to extract a message property, fallback to stringified body
+          if (errorBody?.message) {
+            errorMessage = errorBody.message;
+          } else if (typeof errorBody === 'string') {
+            errorMessage = errorBody;
+          } else {
+            errorMessage = JSON.stringify(errorBody);
+          }
+        } catch {
+          // If not JSON, try text
+          try {
+            const errorText = await response.text();
+            if (errorText) errorMessage = errorText;
+          } catch {
+            // ignore
+          }
+        }
+        throw new Error(errorMessage);
       }
 
       // Handle empty responses
@@ -141,24 +161,24 @@ class HttpClient {
   // Extract token from session cookie (useful for server-side requests)
   static getTokenFromCookie(cookieString: string, cookieName: string = '__session'): string | null {
     if (!cookieString) return null;
-    
+
     const cookies = cookieString.split(';').map(cookie => cookie.trim());
     const sessionCookie = cookies.find(cookie => cookie.startsWith(`${cookieName}=`));
-    
+
     if (!sessionCookie) return null;
-    
+
     const cookieValue = sessionCookie.split('=')[1];
     if (!cookieValue) return null;
-    
+
     try {
       // Cookie value might be URL encoded
       const decodedValue = decodeURIComponent(cookieValue);
-      
+
       // If it's a JWT, return it directly
       if (decodedValue.startsWith('eyJ')) {
         return decodedValue;
       }
-      
+
       // If it's a JSON object, try to parse it and extract the token
       if (decodedValue.startsWith('{')) {
         const sessionData = JSON.parse(decodedValue);
@@ -178,13 +198,13 @@ class HttpClient {
     if (authHeader?.startsWith('Bearer ')) {
       return authHeader.substring(7);
     }
-    
+
     // Then try session cookie
     const cookieHeader = request.headers.get('cookie');
     if (cookieHeader) {
       return HttpClient.getTokenFromCookie(cookieHeader);
     }
-    
+
     return null;
   }
 }

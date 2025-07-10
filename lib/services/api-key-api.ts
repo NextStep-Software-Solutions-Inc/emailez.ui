@@ -1,5 +1,5 @@
 import { httpClient } from './http-client';
-import type { WorkspaceApiKey, CreateWorkspaceApiKeyResponse } from '@/lib/types/api-key.types';
+import type { WorkspaceApiKey, CreateWorkspaceApiKeyResponse, RevokeApiKeyResponse } from '@/lib/types/api-key.types';
 
 export const apiKeyApi = {
     setAuthToken: (token: string | null): void => {
@@ -21,7 +21,7 @@ export const apiKeyApi = {
     },
 
     // Revoke (delete) an API key
-    revokeApiKey: async (workspaceId: string, userId: string, apiKeyId: string): Promise<void> => {
-        return httpClient.delete<void>(`/api/v1/workspaces/${workspaceId}/users/${userId}/apikeys/${apiKeyId}`);
+    revokeApiKey: async (workspaceId: string, userId: string, apiKeyId: string): Promise<RevokeApiKeyResponse> => {
+        return httpClient.delete<RevokeApiKeyResponse>(`/api/v1/workspaces/${workspaceId}/users/${userId}/apikeys/${apiKeyId}`);
     },
 };
