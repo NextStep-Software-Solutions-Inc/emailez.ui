@@ -1,10 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useWorkspace } from '@/lib/contexts/WorkspaceContext';
+import { useAuth } from '@clerk/react-router';
 import type { CreateWorkspaceCommand } from '@/types/index';
 import { Button } from '@/components/ui/button';
+import { apiKeyApi } from '@/lib/services/api-key-api';
+import { memberApi } from '@/lib/services/member-api';
+import type { WorkspaceApiKey, CreateWorkspaceApiKeyResponse } from '@/lib/types/api-key.types';
+import type { WorkspaceMember } from '@/lib/types/member.types';
+import { GeneralTab } from './tabs/GeneralTab';
+import { NotificationsTab } from './tabs/NotificationsTab';
+import { SecurityTab } from './tabs/SecurityTab';
+import { BillingTab } from './tabs/BillingTab';
+import { ApiKeysTab } from './tabs/ApiKeysTab';
+import { MembersTab } from './tabs/MembersTab';
 
 export function Settings() {
   const { currentWorkspace, updateWorkspace, isLoading } = useWorkspace();
+  const { userId } = useAuth();
   
   if (!currentWorkspace) {
     return (
@@ -14,7 +26,7 @@ export function Settings() {
     );
   }
 
-  const [activeTab, setActiveTab] = useState<'general' | 'notifications' | 'security' | 'billing'>('general');
+  const [activeTab, setActiveTab] = useState<'general' | 'notifications' | 'security' | 'billing' | 'apiKeys' | 'members'>('general');
   const [formData, setFormData] = useState({
     name: currentWorkspace.name || '',
     domain: currentWorkspace.domain || '',
@@ -28,6 +40,16 @@ export function Settings() {
     sessionTimeout: 30,
     apiRateLimit: 1000,
   });
+
+  // Restore tabs variable
+  const tabs = [
+    { id: 'general', label: 'General', icon: '⚙️' },
+    { id: 'notifications', label: 'Notifications', icon: '🔔' },
+    { id: 'security', label: 'Security', icon: '🔒' },
+    { id: 'billing', label: 'Billing', icon: '💳' },
+    { id: 'apiKeys', label: 'API Keys', icon: '🔑' },
+    { id: 'members', label: 'Members', icon: '👥' },
+  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,13 +72,6 @@ export function Settings() {
       [field]: value
     }));
   };
-
-  const tabs = [
-    { id: 'general', label: 'General', icon: '⚙️' },
-    { id: 'notifications', label: 'Notifications', icon: '🔔' },
-    { id: 'security', label: 'Security', icon: '🔒' },
-    { id: 'billing', label: 'Billing', icon: '💳' },
-  ];
 
   return (
     <div className="space-y-6">
@@ -89,232 +104,32 @@ export function Settings() {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* General Settings */}
         {activeTab === 'general' && (
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">General Settings</h2>
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                  Organization Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="domain" className="block text-sm font-medium text-gray-700">
-                  Domain
-                </label>
-                <input
-                  type="text"
-                  id="domain"
-                  value={formData.domain}
-                  onChange={(e) => handleInputChange('domain', e.target.value)}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="example.com"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="contactEmail" className="block text-sm font-medium text-gray-700">
-                  Contact Email
-                </label>
-                <input
-                  type="email"
-                  id="contactEmail"
-                  value={formData.contactEmail}
-                  onChange={(e) => handleInputChange('contactEmail', e.target.value)}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="timezone" className="block text-sm font-medium text-gray-700">
-                    Timezone
-                  </label>
-                  <select
-                    id="timezone"
-                    value={formData.timezone}
-                    onChange={(e) => handleInputChange('timezone', e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="UTC">UTC</option>
-                    <option value="America/New_York">Eastern Time</option>
-                    <option value="America/Chicago">Central Time</option>
-                    <option value="America/Denver">Mountain Time</option>
-                    <option value="America/Los_Angeles">Pacific Time</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label htmlFor="language" className="block text-sm font-medium text-gray-700">
-                    Language
-                  </label>
-                  <select
-                    id="language"
-                    value={formData.language}
-                    onChange={(e) => handleInputChange('language', e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="en">English</option>
-                    <option value="es">Spanish</option>
-                    <option value="fr">French</option>
-                    <option value="de">German</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
+          <GeneralTab formData={formData} handleInputChange={handleInputChange} />
         )}
 
         {/* Notification Settings */}
         {activeTab === 'notifications' && (
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Notification Settings</h2>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <label htmlFor="emailNotifications" className="text-sm font-medium text-gray-700">
-                    Email Notifications
-                  </label>
-                  <p className="text-sm text-gray-500">Receive notifications via email</p>
-                </div>
-                <input
-                  type="checkbox"
-                  id="emailNotifications"
-                  checked={formData.emailNotifications}
-                  onChange={(e) => handleInputChange('emailNotifications', e.target.checked)}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <label htmlFor="smsNotifications" className="text-sm font-medium text-gray-700">
-                    SMS Notifications
-                  </label>
-                  <p className="text-sm text-gray-500">Receive notifications via SMS</p>
-                </div>
-                <input
-                  type="checkbox"
-                  id="smsNotifications"
-                  checked={formData.smsNotifications}
-                  onChange={(e) => handleInputChange('smsNotifications', e.target.checked)}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="webhookUrl" className="block text-sm font-medium text-gray-700">
-                  Webhook URL
-                </label>
-                <input
-                  type="url"
-                  id="webhookUrl"
-                  value={formData.webhookUrl}
-                  onChange={(e) => handleInputChange('webhookUrl', e.target.value)}
-                  placeholder="https://your-app.com/webhook"
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <p className="mt-1 text-sm text-gray-500">
-                  We'll send email events to this URL
-                </p>
-              </div>
-            </div>
-          </div>
+          <NotificationsTab formData={formData} handleInputChange={handleInputChange} />
         )}
 
         {/* Security Settings */}
         {activeTab === 'security' && (
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Security Settings</h2>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <label htmlFor="twoFactorEnabled" className="text-sm font-medium text-gray-700">
-                    Two-Factor Authentication
-                  </label>
-                  <p className="text-sm text-gray-500">Add an extra layer of security to your account</p>
-                </div>
-                <input
-                  type="checkbox"
-                  id="twoFactorEnabled"
-                  checked={formData.twoFactorEnabled}
-                  onChange={(e) => handleInputChange('twoFactorEnabled', e.target.checked)}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="sessionTimeout" className="block text-sm font-medium text-gray-700">
-                  Session Timeout (minutes)
-                </label>
-                <input
-                  type="number"
-                  id="sessionTimeout"
-                  value={formData.sessionTimeout}
-                  onChange={(e) => handleInputChange('sessionTimeout', parseInt(e.target.value))}
-                  min="5"
-                  max="480"
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="apiRateLimit" className="block text-sm font-medium text-gray-700">
-                  API Rate Limit (requests per hour)
-                </label>
-                <input
-                  type="number"
-                  id="apiRateLimit"
-                  value={formData.apiRateLimit}
-                  onChange={(e) => handleInputChange('apiRateLimit', parseInt(e.target.value))}
-                  min="100"
-                  max="10000"
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              </div>
-            </div>
-          </div>
+          <SecurityTab formData={formData} handleInputChange={handleInputChange} />
         )}
 
         {/* Billing Settings */}
         {activeTab === 'billing' && (
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Billing Settings</h2>
-            <div className="space-y-4">
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <h3 className="font-medium text-blue-900">Current Plan</h3>
-                <p className="text-sm text-blue-700">Professional - $29/month</p>
-                <p className="text-sm text-blue-700">10,000 emails/month included</p>
-              </div>
+          <BillingTab />
+        )}
 
-              <div className="space-y-2">
-                <h3 className="font-medium text-gray-900">Usage This Month</h3>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Emails sent</span>
-                  <span className="text-sm font-medium">1,247 / 10,000</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div className="bg-blue-600 h-2 rounded-full" style={{ width: '12.47%' }}></div>
-                </div>
-              </div>
+        {/* API Key Management */}
+        {activeTab === 'apiKeys' && userId && (
+          <ApiKeysTab workspaceId={currentWorkspace.workspaceId} userId={userId} />
+        )}
 
-              <div className="pt-4 border-t border-gray-200">
-                <Button
-                  type="button"
-                  variant="outline"
-                >
-                  View Billing History
-                </Button>
-              </div>
-            </div>
-          </div>
+        {/* Membership Management */}
+        {activeTab === 'members' && (
+          <MembersTab workspaceId={currentWorkspace.workspaceId} />
         )}
 
         {/* Save Button */}
