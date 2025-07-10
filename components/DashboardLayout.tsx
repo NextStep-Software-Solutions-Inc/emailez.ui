@@ -136,7 +136,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-sm">E</span>
                 </div>
-                <span className="text-xl font-bold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                <span className="text-xl font-bold text-gray-900"  >
                   Email EZ
                 </span>
               </a>
@@ -175,7 +175,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   currentWorkspace.isActive ? "bg-green-500" : "bg-red-500"
                 )}></div>
                 <div className="flex-1">
-                  <div className="font-medium text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                  <div className="font-medium text-gray-900"  >
                     {currentWorkspace.name}
                   </div>
                   <div className="text-sm text-gray-500">{currentWorkspace.domain}</div>
@@ -197,7 +197,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   )}
                 >
                   <span className="text-lg">{item.icon}</span>
-                  <span className="font-medium" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                  <span className="font-medium"  >
                     {item.label}
                   </span>
                 </a>
@@ -211,7 +211,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 className="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors"
               >
                 <span className="text-lg">🏠</span>
-                <span className="font-medium" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                <span className="font-medium"  >
                   Back to Home
                 </span>
               </a>

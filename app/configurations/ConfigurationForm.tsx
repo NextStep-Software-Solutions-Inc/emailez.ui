@@ -105,21 +105,21 @@ export function ConfigurationForm({ config, workspaceId, onSave, onCancel }: Con
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{ fontFamily: 'Nunito, sans-serif' }}>
+      <h3 className="text-lg font-semibold text-gray-900 mb-4"  >
         {config ? 'Edit Configuration' : 'Add New Configuration'}
       </h3>
       
       {/* SMTP Provider Presets */}
       {!config && (
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
+          <label className="block text-sm font-medium text-gray-700 mb-2"  >
             Quick Setup (Optional)
           </label>
           <select
             value={selectedPreset}
             onChange={(e) => handlePresetChange(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            style={{ fontFamily: 'Nunito, sans-serif' }}
+             
           >
             <option value="">Select a provider to auto-fill settings</option>
             {Object.entries(SMTP_PRESETS).map(([key, preset]) => (
@@ -127,7 +127,7 @@ export function ConfigurationForm({ config, workspaceId, onSave, onCancel }: Con
             ))}
           </select>
           {selectedPreset && (
-            <p className="mt-2 text-sm text-blue-600 bg-blue-50 p-3 rounded-lg" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <p className="mt-2 text-sm text-blue-600 bg-blue-50 p-3 rounded-lg"  >
               💡 {SMTP_PRESETS[selectedPreset].instructions}
             </p>
           )}
@@ -137,7 +137,7 @@ export function ConfigurationForm({ config, workspaceId, onSave, onCancel }: Con
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <label className="block text-sm font-medium text-gray-700 mb-1"  >
               SMTP Host *
             </label>
             <input
@@ -147,18 +147,18 @@ export function ConfigurationForm({ config, workspaceId, onSave, onCancel }: Con
               className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                 errors.smtpHost ? 'border-red-300' : 'border-gray-300'
               }`}
-              style={{ fontFamily: 'Nunito, sans-serif' }}
+               
               placeholder="smtp.gmail.com"
             />
             {errors.smtpHost && (
-              <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Nunito, sans-serif' }}>
+              <p className="mt-1 text-sm text-red-600"  >
                 {errors.smtpHost}
               </p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <label className="block text-sm font-medium text-gray-700 mb-1"  >
               SMTP Port *
             </label>
             <input
@@ -168,20 +168,20 @@ export function ConfigurationForm({ config, workspaceId, onSave, onCancel }: Con
               className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                 errors.smtpPort ? 'border-red-300' : 'border-gray-300'
               }`}
-              style={{ fontFamily: 'Nunito, sans-serif' }}
+               
               placeholder="587"
               min="1"
               max="65535"
             />
             {errors.smtpPort && (
-              <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Nunito, sans-serif' }}>
+              <p className="mt-1 text-sm text-red-600"  >
                 {errors.smtpPort}
               </p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <label className="block text-sm font-medium text-gray-700 mb-1"  >
               Username *
             </label>
             <input
@@ -191,18 +191,18 @@ export function ConfigurationForm({ config, workspaceId, onSave, onCancel }: Con
               className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                 errors.username ? 'border-red-300' : 'border-gray-300'
               }`}
-              style={{ fontFamily: 'Nunito, sans-serif' }}
+               
               placeholder="your-email@example.com"
             />
             {errors.username && (
-              <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Nunito, sans-serif' }}>
+              <p className="mt-1 text-sm text-red-600"  >
                 {errors.username}
               </p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <label className="block text-sm font-medium text-gray-700 mb-1"  >
               Password *
             </label>
             <input
@@ -212,18 +212,18 @@ export function ConfigurationForm({ config, workspaceId, onSave, onCancel }: Con
               className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                 errors.password ? 'border-red-300' : 'border-gray-300'
               }`}
-              style={{ fontFamily: 'Nunito, sans-serif' }}
+               
               placeholder={config ? 'Leave blank to keep current password' : 'Enter password'}
             />
             {errors.password && (
-              <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Nunito, sans-serif' }}>
+              <p className="mt-1 text-sm text-red-600"  >
                 {errors.password}
               </p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <label className="block text-sm font-medium text-gray-700 mb-1"  >
               From Email *
             </label>
             <input
@@ -233,18 +233,18 @@ export function ConfigurationForm({ config, workspaceId, onSave, onCancel }: Con
               className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
                 errors.fromEmail ? 'border-red-300' : 'border-gray-300'
               }`}
-              style={{ fontFamily: 'Nunito, sans-serif' }}
+               
               placeholder="noreply@yourcompany.com"
             />
             {errors.fromEmail && (
-              <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Nunito, sans-serif' }}>
+              <p className="mt-1 text-sm text-red-600"  >
                 {errors.fromEmail}
               </p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <label className="block text-sm font-medium text-gray-700 mb-1"  >
               Display Name
             </label>
             <input
@@ -252,7 +252,7 @@ export function ConfigurationForm({ config, workspaceId, onSave, onCancel }: Con
               value={formData.displayName}
               onChange={(e) => setFormData(prev => ({ ...prev, displayName: e.target.value }))}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              style={{ fontFamily: 'Nunito, sans-serif' }}
+               
               placeholder="Your Company Name"
             />
           </div>
@@ -266,7 +266,7 @@ export function ConfigurationForm({ config, workspaceId, onSave, onCancel }: Con
             onChange={(e) => setFormData(prev => ({ ...prev, useSsl: e.target.checked }))}
             className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
           />
-          <label htmlFor="useSsl" className="ml-2 block text-sm text-gray-700" style={{ fontFamily: 'Nunito, sans-serif' }}>
+          <label htmlFor="useSsl" className="ml-2 block text-sm text-gray-700"  >
             Use SSL/TLS (Recommended)
           </label>
         </div>
@@ -275,7 +275,7 @@ export function ConfigurationForm({ config, workspaceId, onSave, onCancel }: Con
           <Button
             type="submit"
             disabled={isLoading}
-            style={{ fontFamily: 'Nunito, sans-serif' }}
+             
           >
             {isLoading ? 'Saving...' : config ? 'Update Configuration' : 'Add Configuration'}
           </Button>
@@ -283,7 +283,7 @@ export function ConfigurationForm({ config, workspaceId, onSave, onCancel }: Con
             type="button"
             onClick={onCancel}
             variant="ghost"
-            style={{ fontFamily: 'Nunito, sans-serif' }}
+             
           >
             Cancel
           </Button>

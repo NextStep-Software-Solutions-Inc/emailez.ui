@@ -42,7 +42,7 @@ export function WorkspaceSwitcher() {
           "w-3 h-3 rounded-full",
           currentWorkspace.isActive ? "bg-green-500" : "bg-red-500"
         )}></div>
-        <span className="font-medium text-gray-900 truncate max-w-[120px] sm:max-w-[200px]" style={{ fontFamily: 'Nunito, sans-serif' }} title={currentWorkspace.name || undefined}>
+        <span className="font-medium text-gray-900 truncate max-w-[120px] sm:max-w-[200px]"   title={currentWorkspace.name || undefined}>
           {isSwitchingWorkspace ? 'Switching...' : currentWorkspace.name}
         </span>
         {isSwitchingWorkspace ? (

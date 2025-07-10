@@ -51,7 +51,7 @@ export function CreateWorkspaceDialog({ isOpen, onClose }: CreateWorkspaceDialog
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle style={{ fontFamily: 'Nunito, sans-serif' }}>
+          <DialogTitle  >
             Create New Workspace
           </DialogTitle>
           <DialogDescription>

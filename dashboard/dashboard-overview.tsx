@@ -23,7 +23,7 @@ export function DashboardOverview({ workspace, recentEmails, emailConfigurations
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+          <h1 className="text-2xl font-bold text-gray-900"  >
             Dashboard Overview
           </h1>
           <p className="text-gray-600 mt-1">Welcome back, {user?.firstName || 'User'}! Here's your {workspace.name} overview.</p>
@@ -95,7 +95,7 @@ export function DashboardOverview({ workspace, recentEmails, emailConfigurations
 
       {/* Success Rate */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{ fontFamily: 'Nunito, sans-serif' }}>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4"  >
           Success Rate
         </h3>
         <div className="flex items-center">
@@ -113,7 +113,7 @@ export function DashboardOverview({ workspace, recentEmails, emailConfigurations
       <div className="bg-white rounded-lg shadow-sm border border-gray-200">
         <div className="px-6 py-4 border-b border-gray-200">
           <div className="flex justify-between items-center">
-            <h3 className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <h3 className="text-lg font-semibold text-gray-900"  >
               Recent Emails
             </h3>
             <a 
@@ -176,7 +176,7 @@ export function DashboardOverview({ workspace, recentEmails, emailConfigurations
       {/* Email Configurations Summary */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+          <h3 className="text-lg font-semibold text-gray-900"  >
             Email Configurations
           </h3>
           <a 

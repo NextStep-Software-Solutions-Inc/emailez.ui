@@ -50,7 +50,7 @@ export function NotificationToast({ notification, onClose }: NotificationToastPr
           {getIcon()}
         </div>
         <div className="ml-3">
-          <p className="text-sm font-medium" style={{ fontFamily: 'Nunito, sans-serif' }}>
+          <p className="text-sm font-medium"  >
             {notification.message}
           </p>
         </div>

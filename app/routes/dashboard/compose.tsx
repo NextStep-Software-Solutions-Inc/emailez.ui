@@ -33,7 +33,7 @@ export default function DashboardCompose({ loaderData }: Route.ComponentProps) {
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="border-b border-gray-200 pb-4">
-          <h1 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+          <h1 className="text-2xl font-bold text-gray-900"  >
             Compose Email
           </h1>
           <p className="text-gray-600 mt-1">
@@ -50,10 +50,10 @@ export default function DashboardCompose({ loaderData }: Route.ComponentProps) {
               </svg>
             </div>
             <div className="ml-3">
-              <h3 className="text-lg font-medium text-amber-800 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
+              <h3 className="text-lg font-medium text-amber-800 mb-2"  >
                 No Email Configurations Found
               </h3>
-              <p className="text-amber-700 mb-4" style={{ fontFamily: 'Nunito, sans-serif' }}>
+              <p className="text-amber-700 mb-4"  >
                 You need to set up at least one email configuration before you can send emails. 
                 Email configurations define the SMTP settings for sending emails.
               </p>
@@ -61,7 +61,7 @@ export default function DashboardCompose({ loaderData }: Route.ComponentProps) {
                 <a
                   href={`/workspace/${workspaceId}/configurations`}
                   className="inline-flex items-center px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors font-medium"
-                  style={{ fontFamily: 'Nunito, sans-serif' }}
+                   
                 >
                   <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -71,7 +71,7 @@ export default function DashboardCompose({ loaderData }: Route.ComponentProps) {
                 <a
                   href={`/workspace/${workspaceId}`}
                   className="inline-flex items-center px-4 py-2 bg-white text-amber-700 border border-amber-300 rounded-lg hover:bg-amber-50 transition-colors font-medium"
-                  style={{ fontFamily: 'Nunito, sans-serif' }}
+                   
                 >
                   Back to Dashboard
                 </a>

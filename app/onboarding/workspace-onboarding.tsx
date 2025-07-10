@@ -47,7 +47,7 @@ export function WorkspaceOnboarding() {
           <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">
             <span className="text-white font-bold text-2xl">E</span>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2"  >
             Welcome to Email EZ
           </h1>
           <p className="text-gray-600">
@@ -80,7 +80,7 @@ export function WorkspaceOnboarding() {
             {step === 1 && (
               <div className="space-y-4">
                 <div className="text-center mb-6">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2"  >
                     Workspace Details
                   </h2>
                   <p className="text-gray-600 text-sm">
@@ -117,7 +117,7 @@ export function WorkspaceOnboarding() {
             {step === 2 && (
               <div className="space-y-4">
                 <div className="text-center mb-6">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
+                  <h2 className="text-xl font-semibold text-gray-900 mb-2"  >
                     Domain Setup
                   </h2>
                   <p className="text-gray-600 text-sm">

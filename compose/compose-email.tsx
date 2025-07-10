@@ -72,7 +72,7 @@ export function ComposeEmail({ configurations }: ComposeEmailProps) {
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <div className="border-b border-gray-200 pb-4">
-        <h1 className="text-2xl font-bold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+        <h1 className="text-2xl font-bold text-gray-900"  >
           Compose Email
         </h1>
         <p className="text-gray-600 mt-1">
@@ -276,7 +276,7 @@ export function ComposeEmail({ configurations }: ComposeEmailProps) {
 
       {/* Email Templates Section */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4" style={{ fontFamily: 'Nunito, sans-serif' }}>
+        <h2 className="text-lg font-semibold text-gray-900 mb-4"  >
           Quick Templates
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

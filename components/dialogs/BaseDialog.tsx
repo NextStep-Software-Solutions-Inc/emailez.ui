@@ -55,11 +55,11 @@ export function ResponsiveDialog({
         showCloseButton={showCloseButton}
       >
         <DialogHeader>
-          <DialogTitle style={{ fontFamily: 'Nunito, sans-serif' }}>
+          <DialogTitle  >
             {title}
           </DialogTitle>
           {description && (
-            <DialogDescription style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <DialogDescription  >
               {description}
             </DialogDescription>
           )}
@@ -125,7 +125,7 @@ export function ConfirmDialog({
         variant="outline"
         onClick={handleCancel}
         disabled={isLoading}
-        style={{ fontFamily: 'Nunito, sans-serif' }}
+         
       >
         {cancelText}
       </Button>
@@ -133,7 +133,7 @@ export function ConfirmDialog({
         variant={variant === 'destructive' ? 'destructive' : 'default'}
         onClick={handleConfirm}
         disabled={isLoading}
-        style={{ fontFamily: 'Nunito, sans-serif' }}
+         
       >
         {isLoading ? 'Processing...' : confirmText}
       </Button>

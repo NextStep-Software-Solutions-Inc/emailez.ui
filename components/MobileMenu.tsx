@@ -76,7 +76,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           <SignedIn>
             <div className="flex items-center space-x-3 px-2 py-2">
               <UserAvatar />
-              <span className="text-gray-700 font-medium text-sm" style={{ fontFamily: 'Nunito, sans-serif' }}>
+              <span className="text-gray-700 font-medium text-sm"  >
                 Welcome back!
               </span>
             </div>
@@ -85,7 +85,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               onClick={onClose}
               className="text-left px-2 py-1 justify-start"
             >
-              <a href="/dashboard" style={{ fontFamily: 'Nunito, sans-serif' }}>
+              <a href="/dashboard"  >
                 Dashboard
               </a>
             </Button>

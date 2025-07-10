@@ -86,10 +86,10 @@ export function TestEmailDialog({ config, onSend, onOpenChange, isSending, open 
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
         </svg>
       </div>
-      <h4 className="text-lg font-medium text-gray-900 mb-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
+      <h4 className="text-lg font-medium text-gray-900 mb-2"  >
         Test Email Sent Successfully!
       </h4>
-      <p className="text-sm text-gray-600 mb-6" style={{ fontFamily: 'Nunito, sans-serif' }}>
+      <p className="text-sm text-gray-600 mb-6"  >
         The test email has been sent to {formData.recipient}
       </p>
     </div>
@@ -99,7 +99,7 @@ export function TestEmailDialog({ config, onSend, onOpenChange, isSending, open 
     <Button
       onClick={handleCancel}
       className="w-full sm:w-auto"
-      style={{ fontFamily: 'Nunito, sans-serif' }}
+       
     >
       Close
     </Button>
@@ -108,17 +108,17 @@ export function TestEmailDialog({ config, onSend, onOpenChange, isSending, open 
   const formContent = (
     <>
       <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-        <p className="text-sm text-blue-800" style={{ fontFamily: 'Nunito, sans-serif' }}>
+        <p className="text-sm text-blue-800"  >
           <strong>Using configuration:</strong> {config.displayName || config.fromEmail}
         </p>
-        <p className="text-sm text-blue-600" style={{ fontFamily: 'Nunito, sans-serif' }}>
+        <p className="text-sm text-blue-600"  >
           From: {config.fromEmail}
         </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
+          <label className="block text-sm font-medium text-gray-700 mb-1"  >
             Recipient Email *
           </label>
           <input
@@ -128,19 +128,19 @@ export function TestEmailDialog({ config, onSend, onOpenChange, isSending, open 
             className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
               errors.recipient ? 'border-red-300' : 'border-gray-300'
             }`}
-            style={{ fontFamily: 'Nunito, sans-serif' }}
+             
             placeholder="test@example.com"
             disabled={isSending}
           />
           {errors.recipient && (
-            <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <p className="mt-1 text-sm text-red-600"  >
               {errors.recipient}
             </p>
           )}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
+          <label className="block text-sm font-medium text-gray-700 mb-1"  >
             Subject *
           </label>
           <input
@@ -150,19 +150,19 @@ export function TestEmailDialog({ config, onSend, onOpenChange, isSending, open 
             className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
               errors.subject ? 'border-red-300' : 'border-gray-300'
             }`}
-            style={{ fontFamily: 'Nunito, sans-serif' }}
+             
             placeholder="Test Email Subject"
             disabled={isSending}
           />
           {errors.subject && (
-            <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <p className="mt-1 text-sm text-red-600"  >
               {errors.subject}
             </p>
           )}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: 'Nunito, sans-serif' }}>
+          <label className="block text-sm font-medium text-gray-700 mb-1"  >
             Message *
           </label>
           <textarea
@@ -172,12 +172,12 @@ export function TestEmailDialog({ config, onSend, onOpenChange, isSending, open 
             className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
               errors.message ? 'border-red-300' : 'border-gray-300'
             }`}
-            style={{ fontFamily: 'Nunito, sans-serif' }}
+             
             placeholder="Enter your test message here..."
             disabled={isSending}
           />
           {errors.message && (
-            <p className="mt-1 text-sm text-red-600" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <p className="mt-1 text-sm text-red-600"  >
               {errors.message}
             </p>
           )}
@@ -194,7 +194,7 @@ export function TestEmailDialog({ config, onSend, onOpenChange, isSending, open 
         disabled={isSending}
         variant="ghost"
         className="w-full sm:w-auto"
-        style={{ fontFamily: 'Nunito, sans-serif' }}
+         
       >
         Cancel
       </Button>
@@ -202,7 +202,7 @@ export function TestEmailDialog({ config, onSend, onOpenChange, isSending, open 
         type="submit"
         disabled={isSending}
         className="w-full sm:w-auto flex items-center justify-center space-x-2"
-        style={{ fontFamily: 'Nunito, sans-serif' }}
+         
         onClick={handleSubmit}
       >
         {isSending ? (

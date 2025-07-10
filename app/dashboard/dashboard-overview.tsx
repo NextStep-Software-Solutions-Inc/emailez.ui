@@ -40,7 +40,7 @@ export function DashboardOverview({
       {/* Header */}
       <div className="flex flex-col space-y-4 sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
         <div className="min-w-0 flex-1">
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate" style={{ fontFamily: 'Nunito, sans-serif' }}>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate"  >
             Dashboard Overview
           </h1>
           <p className="text-sm sm:text-base text-gray-600 mt-1">Welcome back, {user?.firstName || 'User'}! Here's your {currentWorkspace.name} overview.</p>
@@ -149,7 +149,7 @@ export function DashboardOverview({
       {/* Success Rate and Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{ fontFamily: 'Nunito, sans-serif' }}>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4"  >
             Success Rate
           </h3>
           <div className="flex items-center">
@@ -170,7 +170,7 @@ export function DashboardOverview({
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{ fontFamily: 'Nunito, sans-serif' }}>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4"  >
             Quick Actions
           </h3>
           <div className="space-y-3">
@@ -212,7 +212,7 @@ export function DashboardOverview({
       <div className="bg-white rounded-lg shadow-sm border border-gray-200">
         <div className="px-3 sm:px-6 py-4 border-b border-gray-200">
           <div className="flex flex-col space-y-2 sm:flex-row sm:justify-between sm:items-center sm:space-y-0">
-            <h3 className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+            <h3 className="text-lg font-semibold text-gray-900"  >
               Recent Emails
             </h3>
             <Button 
@@ -298,7 +298,7 @@ export function DashboardOverview({
       {/* Email Configurations Summary */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Nunito, sans-serif' }}>
+          <h3 className="text-lg font-semibold text-gray-900"  >
             Email Configurations
           </h3>
           <Button 

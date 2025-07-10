@@ -228,10 +228,8 @@ export function WorkspaceProvider({ children }: WorkspaceProviderProps) {
         newPath = `/workspace/${workspaceId}`;
       }
       
-      // Use window.location.replace() to force a full page reload without adding to history
-      // This ensures all route loaders are executed with the new workspace ID
-      // and prevents back/forward navigation to previous workspaces
-      window.location.replace(newPath);
+     navigate(newPath, { replace: true });
+     
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to switch workspace');
       throw err;
