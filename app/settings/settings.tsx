@@ -26,6 +26,7 @@ export function Settings() {
 
   const [activeTab, setActiveTab] = useState<'general' | 'notifications' | 'security' | 'billing' | 'apiKeys' | 'members'>('general');
   const [formData, setFormData] = useState({
+    id: currentWorkspace.workspaceId || '',
     name: currentWorkspace.name || '',
     domain: currentWorkspace.domain || '',
     contactEmail: '', // This would come from user profile in a real app
