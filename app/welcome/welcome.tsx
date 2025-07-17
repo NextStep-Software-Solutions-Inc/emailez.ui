@@ -28,22 +28,40 @@ function Hero() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animation-delay-600">
           <SignedOut>
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform"
-
-            >
-              <SignInButton mode="modal">
-                Get Started Free
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
+              <SignInButton
+                mode="modal"
+              >
+                <button
+                  type="button"
+                  className="relative min-w-[220px] w-full sm:w-auto px-8 py-4 rounded-xl font-bold text-lg text-white bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-500 shadow-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 hover:scale-105 transform focus:outline-none focus:ring-4 focus:ring-purple-300"
+                  style={{ boxShadow: '0 4px 24px 0 rgba(99,102,241,0.15), 0 1.5px 6px 0 rgba(139,92,246,0.10)' }}
+                >
+                  <span className="flex items-center justify-center gap-2 w-full">
+                    <span className="inline-flex items-center justify-center" style={{ width: 32, height: 32 }}>
+                      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="40" height="40" rx="10" fill="url(#gs_gradient)" />
+                        <rect x="10" y="12" width="20" height="17" rx="3.5" stroke="white" strokeWidth="2.5" fill="none" />
+                        <polyline points="10,16 20,25 30,16" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                        <defs>
+                          <linearGradient id="gs_gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stopColor="#2563eb" />
+                            <stop offset="1" stopColor="#9333ea" />
+                          </linearGradient>
+                        </defs>
+                      </svg>
+                    </span>
+                    <span className="flex-1 text-center">Get Started Free</span>
+                  </span>
+                </button>
               </SignInButton>
-            </Button>
-            <Link
-              to="/pricing"
-              className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-105 transform text-center block"
-
-            >
-              View Pricing
-            </Link>
+              <Link
+                to="/pricing"
+                className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg min-w-[220px] w-full sm:w-auto hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-105 transform text-center block"
+              >
+                View Pricing
+              </Link>
+            </div>
           </SignedOut>
           <SignedIn>
             <Link
@@ -194,15 +212,11 @@ function CTA() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animation-delay-400">
           <SignedOut>
-            <Button
-              size="lg"
-              className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform"
-
-            >
-              <SignInButton mode="modal">
-                Start Free Trial
-              </SignInButton>
-            </Button>
+            <SignInButton mode="modal">
+              <button
+                className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform"
+              >Start Free Trial</button>
+            </SignInButton>
             <Link
               to="/support"
               className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-105 transform text-center block"
