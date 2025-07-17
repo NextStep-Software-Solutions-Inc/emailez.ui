@@ -11,11 +11,11 @@ interface DashboardOverviewProps {
   emailConfigurations: EmailConfiguration[];
 }
 
-export function DashboardOverview({ 
-  workspaces, 
-  currentWorkspace, 
-  recentEmails, 
-  emailConfigurations 
+export function DashboardOverview({
+  workspaces,
+  currentWorkspace,
+  recentEmails,
+  emailConfigurations
 }: DashboardOverviewProps) {
   const { user } = useUser();
 
@@ -32,7 +32,7 @@ export function DashboardOverview({
   const sentEmails = recentEmails.filter(email => email.status === 'Sent').length;
   const failedEmails = recentEmails.filter(email => email.status === 'Failed').length;
   const queuedEmails = recentEmails.filter(email => email.status === 'Queued').length;
-  
+
   const successRate = totalEmails > 0 ? Math.round((sentEmails / totalEmails) * 100) : 0;
 
   return (
@@ -45,27 +45,26 @@ export function DashboardOverview({
           </h1>
           <p className="text-sm sm:text-base text-gray-600 mt-1">Welcome back, {user?.firstName || 'User'}! Here's your {currentWorkspace.name} overview.</p>
         </div>
-        <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-3 flex-shrink-0">
-          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-            currentWorkspace.isActive 
-              ? 'bg-green-100 text-green-800' 
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 flex-wrap max-w-full">
+          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${currentWorkspace.isActive
+              ? 'bg-green-100 text-green-800'
               : 'bg-red-100 text-red-800'
-          }`}>
+            }`}>
             {currentWorkspace.isActive ? 'Active' : 'Inactive'}
           </span>
-          <div className="flex space-x-2">
-            <Button 
+          <div className="flex flex-row flex-wrap gap-2 w-full sm:w-auto">
+            <Button
               asChild
-              className="w-full sm:w-auto"
+              className="min-w-[140px]"
             >
               <Link to={`/workspace/${currentWorkspace.workspaceId}/compose`}>
                 ✉️ Compose Email
               </Link>
             </Button>
-            <Button 
+            <Button
               variant="outline"
               asChild
-              className="w-full sm:w-auto"
+              className="min-w-[140px]"
             >
               <Link to={`/workspace/${currentWorkspace.workspaceId}/configurations`}>
                 ⚙️ Manage Configs
@@ -154,7 +153,7 @@ export function DashboardOverview({
           </h3>
           <div className="flex items-center">
             <div className="flex-1 bg-gray-200 rounded-full h-4">
-              <div 
+              <div
                 className={cn(
                   "h-4 rounded-full transition-all duration-300",
                   successRate >= 90 ? "bg-green-500" : successRate >= 70 ? "bg-yellow-500" : "bg-red-500"
@@ -174,9 +173,9 @@ export function DashboardOverview({
             Quick Actions
           </h3>
           <div className="space-y-3">
-            <Button 
-              asChild 
-              variant="outline" 
+            <Button
+              asChild
+              variant="outline"
               className="w-full justify-start"
             >
               <Link to={`/workspace/${currentWorkspace.workspaceId}/compose`}>
@@ -184,9 +183,9 @@ export function DashboardOverview({
                 Send Email
               </Link>
             </Button>
-            <Button 
-              asChild 
-              variant="outline" 
+            <Button
+              asChild
+              variant="outline"
               className="w-full justify-start"
             >
               <Link to={`/workspace/${currentWorkspace.workspaceId}/configurations`}>
@@ -194,9 +193,9 @@ export function DashboardOverview({
                 Add Configuration
               </Link>
             </Button>
-            <Button 
-              asChild 
-              variant="outline" 
+            <Button
+              asChild
+              variant="outline"
               className="w-full justify-start"
             >
               <Link to={`/workspace/${currentWorkspace.workspaceId}/analytics`}>
@@ -215,9 +214,9 @@ export function DashboardOverview({
             <h3 className="text-lg font-semibold text-gray-900"  >
               Recent Emails
             </h3>
-            <Button 
-              asChild 
-              variant="link" 
+            <Button
+              asChild
+              variant="link"
               className="text-blue-600 hover:text-blue-800 text-sm font-medium self-start sm:self-auto p-0"
             >
               <Link to={`/workspace/${currentWorkspace.workspaceId}/activity`}>
@@ -226,7 +225,7 @@ export function DashboardOverview({
             </Button>
           </div>
         </div>
-        
+
         {recentEmails.length === 0 ? (
           <div className="px-6 py-12 text-center">
             <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
@@ -248,11 +247,11 @@ export function DashboardOverview({
                     <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
                       <span className={cn(
                         "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium self-start",
-                        email.status === 'Sent' 
+                        email.status === 'Sent'
                           ? 'bg-green-100 text-green-800'
                           : email.status === 'Failed'
-                          ? 'bg-red-100 text-red-800'
-                          : 'bg-yellow-100 text-yellow-800'
+                            ? 'bg-red-100 text-red-800'
+                            : 'bg-yellow-100 text-yellow-800'
                       )}>
                         {email.status === 'Sent' ? '✅' : email.status === 'Failed' ? '❌' : '⏳'}
                         <span className="ml-1">{email.status}</span>
@@ -281,8 +280,8 @@ export function DashboardOverview({
                         Error: {email.errorMessage}
                       </span>
                     )}
-                    <Button 
-                      variant="link" 
+                    <Button
+                      variant="link"
                       className="text-blue-600 hover:text-blue-800 text-sm font-medium whitespace-nowrap p-0 h-auto"
                     >
                       View Details
@@ -301,9 +300,9 @@ export function DashboardOverview({
           <h3 className="text-lg font-semibold text-gray-900"  >
             Email Configurations
           </h3>
-          <Button 
-            asChild 
-            variant="link" 
+          <Button
+            asChild
+            variant="link"
             className="text-blue-600 hover:text-blue-800 text-sm font-medium p-0"
           >
             <Link to={`/workspace/${currentWorkspace.workspaceId}/configurations`}>
@@ -311,7 +310,7 @@ export function DashboardOverview({
             </Link>
           </Button>
         </div>
-        
+
         {emailConfigurations.length === 0 ? (
           <div className="text-center py-8">
             <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
@@ -343,8 +342,8 @@ export function DashboardOverview({
                   <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded font-medium">
                     ✅ Active
                   </span>
-                  <Button 
-                    variant="ghost" 
+                  <Button
+                    variant="ghost"
                     size="sm"
                     asChild
                   >

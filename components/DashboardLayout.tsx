@@ -6,40 +6,41 @@ import { cn } from '@/utils';
 import { useWorkspace } from '@/lib/contexts/WorkspaceContext';
 import { WorkspaceOnboarding } from '@/onboarding/workspace-onboarding';
 import { WorkspaceSwitcher } from './WorkspaceSwitcher';
+import BrandLogo from "./BrandLogo";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
 const navigationItems = [
-  { 
-    path: "", 
-    label: "Overview", 
+  {
+    path: "",
+    label: "Overview",
     icon: "📊"
   },
-  { 
-    path: "/compose", 
-    label: "Compose", 
+  {
+    path: "/compose",
+    label: "Compose",
     icon: "✉️"
   },
-  { 
-    path: "/configurations", 
-    label: "Configurations", 
+  {
+    path: "/configurations",
+    label: "Configurations",
     icon: "⚙️"
   },
-  { 
-    path: "/analytics", 
-    label: "Analytics", 
+  {
+    path: "/analytics",
+    label: "Analytics",
     icon: "📈"
   },
-  { 
-    path: "/activity", 
-    label: "Activity", 
+  {
+    path: "/activity",
+    label: "Activity",
     icon: "📋"
   },
-  { 
-    path: "/settings", 
-    label: "Settings", 
+  {
+    path: "/settings",
+    label: "Settings",
     icon: "🔧"
   }
 ];
@@ -51,7 +52,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const isActive = (path: string) => {
     if (!currentWorkspace) return false;
-    
+
     const fullPath = `/workspace/${currentWorkspace.workspaceId}${path}`;
     if (path === '') {
       return location.pathname === `/workspace/${currentWorkspace.workspaceId}`;
@@ -99,26 +100,26 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   className="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
                 >
                   <div className="w-6 h-6 relative">
-                    <svg 
+                    <svg
                       className={cn(
                         "w-6 h-6 absolute inset-0 transition-opacity duration-300 ease-in-out",
                         isSidebarOpen ? "opacity-0" : "opacity-100"
                       )}
-                      fill="none" 
-                      stroke="currentColor" 
+                      fill="none"
+                      stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
-                      <rect x="3" y="4" width="18" height="16" rx="2" ry="2" strokeWidth="2"/>
-                      <path d="M9 4v16" strokeWidth="2"/>
+                      <rect x="3" y="4" width="18" height="16" rx="2" ry="2" strokeWidth="2" />
+                      <path d="M9 4v16" strokeWidth="2" />
                     </svg>
-                    
-                    <svg 
+
+                    <svg
                       className={cn(
                         "w-6 h-6 absolute inset-0 transition-opacity duration-300 ease-in-out",
                         isSidebarOpen ? "opacity-100" : "opacity-0"
                       )}
-                      fill="none" 
-                      stroke="currentColor" 
+                      fill="none"
+                      stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -130,15 +131,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               {/* Logo */}
               <a href="/" className={cn(
                 "flex items-center space-x-3 transition-all duration-300 ease-in-out",
-                "lg:ml-0",
-                "ml-4"
+                "lg:ml-0"
               )}>
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">E</span>
-                </div>
-                <span className="text-xl font-bold text-gray-900"  >
-                  Email EZ
-                </span>
+                <BrandLogo />
               </a>
             </div>
 
@@ -220,7 +215,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </aside>
 
         {/* Backdrop for mobile - provides visual feedback but doesn't block content */}
-        <div 
+        <div
           className={cn(
             "fixed inset-0 bg-black/10 z-40 lg:hidden pointer-events-none",
             "transition-opacity duration-500 ease-in-out",

@@ -3,16 +3,21 @@ import { useElementHeight } from "@/hooks/useElementHeight";
 import { SignedIn, SignedOut, SignInButton } from '@clerk/react-router';
 import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
-import BrandLogo from "@/components/BrandLogo";
 
-
+function BrandName() {
+  return (
+    <span className="text-8xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent antialiased" style={{ fontFamily: 'Nunito, Comfortaa, sans-serif', fontWeight: 900 }}>
+      Email EZ
+    </span>
+  );
+}
 
 function Hero() {
   return (
     <section className="bg-gradient-to-br from-slate-50 to-blue-50 py-20 px-6">
       <div className="max-w-6xl mx-auto text-center">
         <div className="mb-8 animate-fade-in-up animation-delay-0">
-          <BrandLogo />
+          <BrandName />
         </div>
         <h2 className="text-2xl md:text-3xl text-gray-700 mb-6 font-medium animate-fade-in-up animation-delay-200"  >
           Simple, Powerful Email Sending Service
