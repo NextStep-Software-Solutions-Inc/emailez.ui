@@ -3,60 +3,55 @@ import { useElementHeight } from "@/hooks/useElementHeight";
 import { SignedIn, SignedOut, SignInButton } from '@clerk/react-router';
 import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
+import BrandLogo from "@/components/BrandLogo";
 
-function BrandName() {
-  return (
-    <span className="text-6xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent antialiased" style={{ fontFamily: 'Nunito, Comfortaa, sans-serif', fontWeight: 900 }}>
-      Email EZ
-    </span>
-  );
-}
+
 
 function Hero() {
   return (
     <section className="bg-gradient-to-br from-slate-50 to-blue-50 py-20 px-6">
       <div className="max-w-6xl mx-auto text-center">
         <div className="mb-8 animate-fade-in-up animation-delay-0">
-          <BrandName />
+          <BrandLogo />
         </div>
         <h2 className="text-2xl md:text-3xl text-gray-700 mb-6 font-medium animate-fade-in-up animation-delay-200"  >
           Simple, Powerful Email Sending Service
         </h2>
         <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animation-delay-400"  >
-          Multi-workspace subscription service that lets you configure multiple email providers, 
+          Multi-workspace subscription service that lets you configure multiple email providers,
           manage SMTP settings, and send emails effortlessly across all your projects.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animation-delay-600">
           <SignedOut>
-            <Button 
-              size="lg" 
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform" 
-               
+            <Button
+              size="lg"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform"
+
             >
               <SignInButton mode="modal">
                 Get Started Free
               </SignInButton>
             </Button>
-            <Link 
+            <Link
               to="/pricing"
-              className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-105 transform text-center block" 
-               
+              className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-105 transform text-center block"
+
             >
               View Pricing
             </Link>
           </SignedOut>
           <SignedIn>
-            <Link 
+            <Link
               to="/dashboard"
-              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform text-center block" 
-               
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform text-center block"
+
             >
               Go to Dashboard
             </Link>
-            <Link 
+            <Link
               to="/dashboard/settings"
-              className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-105 transform text-center block" 
-               
+              className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-600 hover:text-white transition-all duration-300 hover:scale-105 transform text-center block"
+
             >
               Manage Account
             </Link>
@@ -114,8 +109,8 @@ function Features() {
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className="p-6 rounded-xl bg-gradient-to-br from-gray-50 to-blue-50 hover:from-blue-50 hover:to-purple-50 transition-all duration-300 hover:shadow-lg hover:scale-105 transform animate-fade-in-up cursor-pointer"
               style={{ animationDelay: `${index * 150}ms` }}
             >
@@ -194,35 +189,35 @@ function CTA() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up animation-delay-400">
           <SignedOut>
-            <Button 
-              size="lg" 
-              className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform" 
-               
+            <Button
+              size="lg"
+              className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform"
+
             >
               <SignInButton mode="modal">
                 Start Free Trial
               </SignInButton>
             </Button>
-            <Link 
+            <Link
               to="/support"
-              className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-105 transform text-center block" 
-               
+              className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-105 transform text-center block"
+
             >
               Contact Sales
             </Link>
           </SignedOut>
           <SignedIn>
-            <Link 
+            <Link
               to="/dashboard"
-              className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform text-center block" 
-               
+              className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 transform text-center block"
+
             >
               Access Dashboard
             </Link>
-            <Link 
+            <Link
               to="/pricing"
-              className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-105 transform text-center block" 
-               
+              className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 hover:scale-105 transform text-center block"
+
             >
               Upgrade Plan
             </Link>
@@ -235,11 +230,11 @@ function CTA() {
 
 export function Welcome() {
   const headerHeight = useElementHeight(null, 'header', 800);
-  
+
   return (
-    <div 
-      className="min-h-screen transition-all duration-300" 
-      style={{ 
+    <div
+      className="min-h-screen transition-all duration-300"
+      style={{
         fontFamily: 'Nunito, sans-serif',
         paddingTop: `${headerHeight}px`
       }}
