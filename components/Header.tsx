@@ -26,7 +26,7 @@ export default function Header() {
   };
 
   return (
-    <header 
+    <header
       ref={headerRef}
       className={cn(
         "bg-white/95 backdrop-blur-sm shadow-sm fixed top-0 left-0 right-0 z-50",
@@ -38,9 +38,6 @@ export default function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <a href="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">E</span>
-            </div>
             <BrandLogo />
           </a>
 
@@ -74,16 +71,16 @@ export default function Header() {
           </div>
 
           {/* Mobile Menu Button */}
-          <MobileMenuButton 
-            isOpen={isMobileMenuOpen} 
-            onClick={toggleMobileMenu} 
+          <MobileMenuButton
+            isOpen={isMobileMenuOpen}
+            onClick={toggleMobileMenu}
           />
         </div>
 
         {/* Mobile Menu */}
-        <MobileMenu 
-          isOpen={isMobileMenuOpen} 
-          onClose={closeMobileMenu} 
+        <MobileMenu
+          isOpen={isMobileMenuOpen}
+          onClose={closeMobileMenu}
         />
       </div>
     </header>
