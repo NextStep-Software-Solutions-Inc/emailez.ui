@@ -18,18 +18,18 @@ const navigationItems = [
 
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   return (
-    <div 
+    <div
       className={cn(
-        "md:hidden mt-4 pb-4 border-t border-gray-100 overflow-hidden",
+        "md:hidden border-t border-gray-100 overflow-hidden",
         "transition-all duration-300 ease-in-out",
-        isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+        isOpen ? "max-h-96 opacity-100 mt-4 pb-4" : "max-h-0 opacity-0"
       )}
     >
       <nav className="flex flex-col space-y-4 pt-4">
         {navigationItems.map((item, index) => (
-          <NavigationLink 
+          <NavigationLink
             key={item.href}
-            href={item.href} 
+            href={item.href}
             onClick={onClose}
             className={cn(
               "px-2 py-1 transition-all duration-300 ease-in-out",
@@ -42,9 +42,9 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             {item.label}
           </NavigationLink>
         ))}
-        
+
         {/* Mobile Auth Buttons */}
-        <div 
+        <div
           className={cn(
             "flex flex-col space-y-3 pt-4 border-t border-gray-100",
             "transition-all duration-300 ease-in-out",
@@ -55,8 +55,8 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           }}
         >
           <SignedOut>
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
               onClick={onClose}
               className="text-left px-2 py-1 justify-start"
             >
@@ -64,8 +64,8 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 Sign In
               </SignInButton>
             </Button>
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               onClick={onClose}
             >
               <SignInButton mode="modal">
@@ -80,8 +80,8 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                 Welcome back!
               </span>
             </div>
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
               onClick={onClose}
               className="text-left px-2 py-1 justify-start"
             >

@@ -1,6 +1,7 @@
 import type { Route } from "./+types/support";
+import { Mail, Phone } from "lucide-react";
 
-export function meta({}: Route.MetaArgs) {
+export function meta({ }: Route.MetaArgs) {
   return [
     { title: "Support - Email EZ" },
     { name: "description", content: "Get help and support for Email EZ" },
@@ -9,23 +10,37 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Support() {
   return (
-    <div className="min-h-screen bg-gray-50 py-20">
-      <div className="container mx-auto px-6">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4"  >
-            Support
-          </h1>
-          <p className="text-xl text-gray-600 mb-8"  >
-            Temporary Support page - Coming soon!
-          </p>
-          <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 max-w-2xl mx-auto">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4"  >
-              🤝 Get Help
-            </h2>
-            <p className="text-gray-600"  >
-              This is a temporary placeholder for the Support page. Here you can provide contact information, help center, FAQ, and support ticket system for Email EZ users.
-            </p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pt-24 sm:pt-10 flex items-center justify-center">
+      <div className="w-full max-w-lg mx-auto px-4 sm:px-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 sm:p-8">
+          <div className="flex flex-col items-center text-center mb-6">
+            <span className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 mb-4">
+              <Mail size={48} color="#fff" strokeWidth={2.2} />
+            </span>
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Contact Us</h1>
+            <p className="text-base sm:text-lg text-gray-600">We're here to help! Reach out to us and we'll get back to you as soon as possible.</p>
           </div>
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+              <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
+                <Mail size={28} color="#2563eb" strokeWidth={2.2} />
+              </div>
+              <div className="flex-1 text-center sm:text-left">
+                <p className="text-sm text-gray-500">Email</p>
+                <a href="mailto:wave.ambray@nextstep-software.com" className="text-lg font-medium text-blue-700 hover:underline break-all">wave.ambray@nextstep-software.com</a>
+              </div>
+            </div>
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+              <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center">
+                <Phone size={28} color="#9333ea" strokeWidth={2.2} />
+              </div>
+              <div className="flex-1 text-center sm:text-left">
+                <p className="text-sm text-gray-500">Mobile</p>
+                <a href="tel:09654297640" className="text-lg font-medium text-purple-700 hover:underline">0965 429 7640</a>
+              </div>
+            </div>
+          </div>
+          <div className="mt-8 text-center text-xs text-gray-400">&copy; {new Date().getFullYear()} Email EZ. All rights reserved.</div>
         </div>
       </div>
     </div>
