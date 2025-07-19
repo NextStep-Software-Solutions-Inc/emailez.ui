@@ -181,14 +181,19 @@ function CTA() {
 }
 
 export function Welcome() {
-  const headerHeight = useElementHeight(null, 'header', 800);
+  // Use a smaller fallback and only apply padding if headerHeight is not the fallback
+  const FALLBACK_HEADER_HEIGHT = 64;
+  const headerHeight = useElementHeight(null, 'header', FALLBACK_HEADER_HEIGHT);
+
+  // Only apply padding if headerHeight is not the fallback (header exists)
+  const paddingTop = headerHeight !== FALLBACK_HEADER_HEIGHT ? `${headerHeight}px` : undefined;
 
   return (
     <div
       className="min-h-screen transition-all duration-300 overflow-x-hidden scrollbar-hide"
       style={{
         fontFamily: 'Nunito, sans-serif',
-        paddingTop: `${headerHeight}px`
+        ...(paddingTop ? { paddingTop } : {})
       }}
     >
       <Hero>
