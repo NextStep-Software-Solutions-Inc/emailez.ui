@@ -10,7 +10,7 @@ export function meta({ }: Route.MetaArgs) {
 
 export default function Support() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pt-24 sm:pt-10 flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 pt-24 md:pt-10 flex items-center justify-center">
       <div className="w-full max-w-lg mx-auto px-4 sm:px-6">
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 sm:p-8">
           <div className="flex flex-col items-center text-center mb-6">

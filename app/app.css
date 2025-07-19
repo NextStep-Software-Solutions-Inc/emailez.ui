@@ -1,3 +1,104 @@
+@keyframes email-trail-fade {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.12;
+  }
+  20% {
+    opacity: 0.18;
+  }
+  80% {
+    opacity: 0.18;
+  }
+  90% {
+    opacity: 0.12;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.animate-email-trail-fade {
+  position: absolute;
+  animation: email-trail-fade 8s linear infinite;
+}
+@keyframes email-fly {
+  0% {
+    left: -200px;
+    opacity: 0.7;
+  }
+  10% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    left: 100vw;
+    opacity: 0.7;
+  }
+}
+
+.animate-email-fly {
+  position: absolute;
+  animation: email-fly 8s linear infinite;
+}
+
+.animate-email-fly:nth-of-type(2) {
+  animation-delay: 1.5s;
+}
+.animate-email-fly:nth-of-type(3) {
+  animation-delay: 3s;
+}
+
+.animate-email-trail {
+  position: absolute;
+  animation: email-trail 8s linear infinite;
+}
+.animate-email-trail:nth-of-type(2) {
+  animation-delay: 1.5s;
+}
+.animate-email-trail:nth-of-type(3) {
+  animation-delay: 3s;
+}
+
+@keyframes email-trail {
+  0% {
+    left: -200px;
+    opacity: 0.15;
+  }
+  10% {
+    opacity: 0.25;
+  }
+  80% {
+    opacity: 0.25;
+  }
+  100% {
+    left: 100vw;
+    opacity: 0.15;
+  }
+}
+
+.animate-email-trail {
+  position: absolute;
+  animation: email-trail 6s linear infinite;
+}
+@keyframes gradient-move {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-move {
+  animation: gradient-move 4s ease-in-out infinite;
+}
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -224,5 +325,19 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@media (max-width: 640px) {
+  body,
+  html,
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  body::-webkit-scrollbar,
+  html::-webkit-scrollbar,
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }
