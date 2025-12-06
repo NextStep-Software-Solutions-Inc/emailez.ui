@@ -1,4 +1,4 @@
-import { use, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Line, LineChart, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import type { GetWorkspaceAnalyticsResponse } from '@/types/workspace.types';
@@ -26,15 +26,15 @@ export function Analytics({ analytics: data, daysBack }: AnalyticsProps) {
     }
   }, [data]);
 
-  
+
   // Use real chart data from analytics trend or fallback to demo data
   const getChartData = () => {
     if (analytics.emailVolumeOverTime && analytics.emailVolumeOverTime.length > 0) {
       // Use real trend data from the API
       return analytics.emailVolumeOverTime.map(item => ({
-        date: new Date(item.date).toLocaleDateString('en-US', { 
-          month: 'short', 
-          day: 'numeric' 
+        date: new Date(item.date).toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric'
         }),
         sent: item.sent,
         failed: item.failed
@@ -256,14 +256,14 @@ export function Analytics({ analytics: data, daysBack }: AnalyticsProps) {
         <ChartContainer config={chartConfig} className="h-64 w-full">
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis 
-              dataKey="date" 
+            <XAxis
+              dataKey="date"
               axisLine={false}
               tickLine={false}
               tickMargin={8}
               tick={{ fontSize: 12 }}
             />
-            <YAxis 
+            <YAxis
               axisLine={false}
               tickLine={false}
               tickMargin={8}
@@ -291,7 +291,7 @@ export function Analytics({ analytics: data, daysBack }: AnalyticsProps) {
             />
           </LineChart>
         </ChartContainer>
-        
+
         {/* Chart Summary */}
         <div className="flex flex-col sm:flex-row items-center justify-between mt-4 space-y-2 sm:space-y-0">
           <div className="flex items-center space-x-6">
