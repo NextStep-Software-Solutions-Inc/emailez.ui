@@ -1,7 +1,7 @@
 export default function BrandLogo() {
   return (
-    <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent antialiased" style={{ fontFamily: 'Nunito, Comfortaa, sans-serif', fontWeight: 900 }}>
-      Email EZ
+    <span className="flex items-center space-x-2">
+      <img src="/emailez-logo-01.png" alt="Email EZ Logo" width={120} className="rounded-lg" />
     </span>
   );
 }

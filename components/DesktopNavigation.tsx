@@ -1,10 +1,10 @@
 import NavigationLink from "./NavigationLink";
 
 const navigationItems = [
-  { href: "#features", label: "Features" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "#docs", label: "Docs" },
-  { href: "#support", label: "Support" }
+  { href: "/features", label: "Features" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/docs", label: "Docs" },
+  { href: "/support", label: "Support" }
 ];
 
 export default function DesktopNavigation() {
